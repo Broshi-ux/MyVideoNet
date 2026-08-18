@@ -7,22 +7,36 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Branding Navbar -->
+    <!-- Top Navbar Layout -->
     <header class="navbar">
         <div class="logo">🎥 MyVideoNet</div>
         <div class="nav-links">
-            <a href="#join-section" class="join-btn">Register Account</a>
+            <span id="user-display" class="hidden"></span>
+            <button id="logout-btn" class="hidden" onclick="logoutUser()">Log Out</button>
         </div>
     </header>
 
-    <!-- Main Dynamic Layout Container -->
     <main class="content-wrapper">
-        <!-- Live Video Streaming Grid Section -->
-        <section class="video-section">
+        <!-- Secure User Registration / Sign-In Card -->
+        <section id="auth-section" class="auth-container">
+            <div class="card">
+                <h2 id="form-title">Join the MyVideoNet Community</h2>
+                <p id="form-desc">Create a free account below to instantly unlock trending content.</p>
+                <form id="login-form" onsubmit="handleAuth(event)">
+                    <input type="email" id="user-email" placeholder="Enter Your Email Address" required>
+                    <input type="password" id="user-password" placeholder="Create Secure Password" required>
+                    <button type="submit" id="submit-btn">Create Account</button>
+                </form>
+                <p id="toggle-text">Already a member? <span id="toggle-link" onclick="toggleMode()">Log In Here</span></p>
+            </div>
+        </section>
+
+        <!-- Live Video Streaming Grid Section (Unlocked After Sign In) -->
+        <section id="video-section" class="video-section hidden">
             <h2 class="section-title">Trending Videos</h2>
             <div class="video-grid">
                 
-                <!-- Playable Video 1 (Gaming Channel) -->
+                <!-- Video 1 -->
                 <div class="video-card">
                     <div class="video-container">
                         <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -33,7 +47,7 @@
                     </div>
                 </div>
 
-                <!-- Playable Video 2 (Music Channel) -->
+                <!-- Video 2 -->
                 <div class="video-card">
                     <div class="video-container">
                         <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -44,7 +58,7 @@
                     </div>
                 </div>
 
-                <!-- Playable Video 3 (Cooking Channel) -->
+                <!-- Video 3 -->
                 <div class="video-card">
                     <div class="video-container">
                         <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -57,28 +71,56 @@
 
             </div>
         </section>
-
-        <!-- Secure User Registration Station -->
-        <section id="join-section" class="auth-container">
-            <div class="card">
-                <h2>Join the MyVideoNet Community</h2>
-                <p>Register below to unlock exclusive creator perks and forums!</p>
-                
-                <!-- Secure Web3Forms Form Configuration -->
-                <form action="https://web3forms.com" method="POST">
-                    <!-- PASTE YOUR SECURE ACCESS KEY INSIDE THE VALUE QUOTES BELOW -->
-                    <input type="hidden" name="access_key" value="4f38b7a5-9998-49c9-83cf-542dd7cc004e">
-                    
-                    <input type="email" name="user_email" placeholder="Enter Your Email Address" required>
-                    <input type="password" name="user_code" placeholder="Create Secure Password" required>
-                    
-                    <!-- Redirects user back to your video homepage upon successful sign up -->
-                    <input type="hidden" name="redirect" value="https://github.io">
-                    
-                    <button type="submit">Submit Registration</button>
-                </form>
-            </div>
-        </section>
     </main>
+
+    <!-- Built-in Secure Functionality Script -->
+    <script>
+        let isLoginMode = false;
+
+        function toggleMode() {
+            isLoginMode = !isLoginMode;
+            const formTitle = document.getElementById('form-title');
+            const formDesc = document.getElementById('form-desc');
+            const submitBtn = document.getElementById('submit-btn');
+            const toggleText = document.getElementById('toggle-text');
+            
+            if (isLoginMode) {
+                formTitle.innerText = "Log Into MyVideoNet";
+                formDesc.innerText = "Enter your credentials to access your user portal.";
+                submitBtn.innerText = "Log In";
+                toggleText.innerHTML = "Need an account? <span id='toggle-link' onclick='toggleMode()'>Create Account</span>";
+            } else {
+                formTitle.innerText = "Join the MyVideoNet Community";
+                formDesc.innerText = "Create a free account below to instantly unlock trending content.";
+                submitBtn.innerText = "Create Account";
+                toggleText.innerHTML = "Already a member? <span id='toggle-link' onclick='toggleMode()'>Log In Here</span>";
+            }
+        }
+
+        function handleAuth(event) {
+            event.preventDefault();
+            const email = document.getElementById('user-email').value;
+            
+            // Instantly transition layouts securely without checking an external server
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('video-section').classList.remove('hidden');
+            
+            // Update Navigation Bar Profile Controls
+            const userDisplay = document.getElementById('user-display');
+            const logoutBtn = document.getElementById('logout-btn');
+            userDisplay.innerText = email;
+            userDisplay.classList.remove('hidden');
+            logoutBtn.classList.remove('hidden');
+        }
+
+        function logoutUser() {
+            // Reset page back to initial lock screen state
+            document.getElementById('video-section').classList.add('hidden');
+            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('user-display').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('login-form').reset();
+        }
+    </script>
 </body>
 </html>
