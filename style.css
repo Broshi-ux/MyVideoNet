@@ -1,80 +1,42 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #0f0f0f;
-    color: #f1f1f1;
-    margin: 0;
-    padding: 0;
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #212121;
-    padding: 10px 20px;
-    height: 40px;
-    border-bottom: 1px solid #3d3d3d;
+.section-title {
+    margin-bottom: 20px;
+    font-size: 22px;
+    border-bottom: 2px solid #cc0000;
+    padding-bottom: 8px;
+    display: inline-block;
 }
-.logo {
-    font-size: 20px;
-    font-weight: bold;
-    color: #ff0000;
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* Perfect 16:9 widescreen ratio */
+    height: 0;
+    overflow: hidden;
 }
-.auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px 8px 0 0;
 }
-.card {
-    background-color: #212121;
-    padding: 40px;
-    border-radius: 8px;
-    width: 320px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-h2 { margin-bottom: 20px; }
-form { display: flex; flex-direction: column; gap: 15px; }
-input {
-    padding: 12px;
-    border-radius: 4px;
-    border: 1px solid #3d3d3d;
-    background-color: #121212;
-    color: white;
-}
-button {
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
+.join-btn {
     background-color: #cc0000;
     color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
     font-weight: bold;
-    cursor: pointer;
+    font-size: 14px;
 }
-button:hover { background-color: #ff0000; }
-#toggle-link { color: #3ea6ff; cursor: pointer; text-decoration: underline; }
-.video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 30px;
+.join-btn:hover {
+    background-color: #ff0000;
 }
-.video-card {
-    background-color: #1c1c1c;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-}
-.thumbnail {
-    background-color: #333;
-    height: 160px;
+.nav-links {
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 50px;
 }
-.video-info { padding: 12px; }
-.video-info h3 { margin: 0 0 6px 0; font-size: 16px; }
-.video-info p { margin: 0; color: #aaa; font-size: 14px; }
-.hidden { display: none !important; }
-#logout-btn { background-color: #3d3d3d; padding: 6px 12px; }
