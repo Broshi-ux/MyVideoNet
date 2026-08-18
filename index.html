@@ -450,17 +450,21 @@
     <script>
         "use strict";
 
-        /*
-        ============================================================
-        MYVIDEONET SETTINGS
-        ============================================================
-        */
-
         const USER_STORAGE_KEY = "myVideoNetUser";
-        const VIDEO_STORAGE_KEY = "myVideoNetVideos";
+
+        const SUPABASE_URL =
+            "https://nnwcwfsgjduipbalwjhi.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_cBk88lLLm_T52T8s6kYFag_Qw-iya5T";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
 
         let isLoginMode = false;
-
 
         /*
         ============================================================
@@ -1321,7 +1325,7 @@
 
             renderVideos();
         }
-
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     </script>
 
 </body>
