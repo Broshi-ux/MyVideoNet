@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -16,260 +17,417 @@
         }
 
         body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background-color: #0f0f0f;
-            color: #f1f1f1;
             margin: 0;
             padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #0f0f0f;
+            color: #f1f1f1;
         }
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #212121;
-            padding: 10px 20px;
-            min-height: 60px;
-            border-bottom: 1px solid #3d3d3d;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ff0000;
-        }
-
-        .user-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #user-display {
-            font-size: 14px;
-            color: #aaa;
-        }
-
-        #logout-btn {
-            background-color: #3d3d3d;
-            padding: 7px 12px;
-            font-size: 13px;
-        }
-
-        #logout-btn:hover {
-            background-color: #555;
-        }
-
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-        }
-
-        .card {
-            background-color: #212121;
-            padding: 40px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        }
-
-        h2 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        p {
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
+        button,
         input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 4px;
-            border: 1px solid #3d3d3d;
-            background-color: #121212;
-            color: white;
-            font-size: 14px;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #ff0000;
+            font: inherit;
         }
 
         button {
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            background-color: #cc0000;
-            color: white;
-            font-weight: bold;
             cursor: pointer;
-            font-size: 15px;
-        }
-
-        button:hover {
-            background-color: #ff0000;
-        }
-
-        #toggle-link {
-            color: #3ea6ff;
-            cursor: pointer;
-            text-decoration: underline;
         }
 
         .hidden {
             display: none !important;
         }
 
-        .section-title {
-            margin-bottom: 20px;
-            font-size: 22px;
-            border-bottom: 2px solid #cc0000;
-            padding-bottom: 8px;
-            display: inline-block;
-            color: white;
+        /* ======================================================
+           NAVBAR
+           ====================================================== */
+
+        .navbar {
+            min-height: 60px;
+            padding: 10px 20px;
+            background: #212121;
+            border-bottom: 1px solid #333;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        /* CREATOR STUDIO */
+        .logo {
+            color: #ff0000;
+            font-size: 21px;
+            font-weight: 700;
+        }
 
-        .creator-studio {
-            background-color: #1c1c1c;
+        .user-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #user-display {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        #logout-btn {
+            border: 0;
+            border-radius: 5px;
+            background: #3d3d3d;
+            color: white;
+            padding: 8px 13px;
+        }
+
+        #logout-btn:hover {
+            background: #555;
+        }
+
+        /* ======================================================
+           MAIN LAYOUT
+           ====================================================== */
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px 20px 50px;
+        }
+
+        /* ======================================================
+           LOGIN / REGISTER
+           ====================================================== */
+
+        .auth-container {
+            min-height: calc(100vh - 110px);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 390px;
+
+            background: #212121;
             border: 1px solid #333;
             border-radius: 10px;
-            padding: 20px;
+
+            padding: 35px;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .auth-card h1 {
+            margin: 0 0 8px;
+            color: white;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .auth-description {
+            margin: 0 0 25px;
+            color: #aaa;
+            text-align: center;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .text-input {
+            width: 100%;
+
+            padding: 12px 13px;
+
+            background: #121212;
+            color: white;
+
+            border: 1px solid #444;
+            border-radius: 5px;
+
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: #ff0000;
+        }
+
+        .primary-btn {
+            border: 0;
+            border-radius: 5px;
+
+            padding: 12px 16px;
+
+            background: #cc0000;
+            color: white;
+
+            font-weight: 700;
+        }
+
+        .primary-btn:hover {
+            background: #ff0000;
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .auth-switch {
+            margin: 18px 0 0;
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .link-button {
+            background: transparent;
+            border: 0;
+            padding: 0;
+
+            color: #3ea6ff;
+            text-decoration: underline;
+
+            cursor: pointer;
+        }
+
+        .message {
+            min-height: 20px;
+            margin: 14px 0 0;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.error {
+            color: #ff6b6b;
+        }
+
+        .message.success {
+            color: #63d471;
+        }
+
+        /* ======================================================
+           CREATOR STUDIO
+           ====================================================== */
+
+        .creator-studio {
             margin-bottom: 35px;
+            padding: 22px;
+
+            background: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 10px;
         }
 
         .creator-studio h2 {
-            margin: 0 0 5px 0;
+            margin: 0 0 6px;
+            color: white;
         }
 
-        .creator-studio-description {
-            margin-top: 0;
-            margin-bottom: 20px;
+        .creator-description {
+            margin: 0 0 18px;
+            color: #aaa;
+            font-size: 14px;
         }
 
         .creator-form {
             display: grid;
             grid-template-columns: 1fr 1fr auto;
             gap: 10px;
-            align-items: center;
         }
 
-        .creator-form button {
-            white-space: nowrap;
+        #creator-message {
+            text-align: left;
         }
 
-        .form-message {
-            margin: 12px 0 0 0;
-            min-height: 20px;
-            font-size: 14px;
-        }
+        /* ======================================================
+           TRENDING
+           ====================================================== */
 
-        .form-message.success {
-            color: #4caf50;
-        }
+        .section-title {
+            display: inline-block;
 
-        .form-message.error {
-            color: #ff5c5c;
-        }
+            margin: 0 0 20px;
+            padding-bottom: 8px;
 
-        /* VIDEO GRID */
+            color: white;
+            font-size: 22px;
+
+            border-bottom: 2px solid #cc0000;
+        }
 
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding-top: 10px;
+
+            grid-template-columns:
+                repeat(auto-fill, minmax(300px, 1fr));
+
+            gap: 22px;
         }
 
         .video-card {
-            background-color: #1c1c1c;
-            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+            background: #1c1c1c;
+            border: 1px solid #292929;
+            border-radius: 9px;
+
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
         .video-container {
             position: relative;
-            padding-bottom: 56.25%;
+
+            width: 100%;
             height: 0;
+            padding-bottom: 56.25%;
+
             overflow: hidden;
-            background-color: #000;
+            background: black;
         }
 
         .video-container iframe {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
+
             width: 100%;
             height: 100%;
+
             border: 0;
         }
 
         .video-info {
-            padding: 12px;
+            padding: 14px;
         }
 
-        .video-info h3 {
-            margin: 0 0 6px 0;
-            font-size: 16px;
+        .video-title {
+            margin: 0 0 7px;
+
+            color: white;
+            font-size: 17px;
             line-height: 1.35;
-            color: #fff;
+
             overflow-wrap: anywhere;
         }
 
-        .video-info p {
-            margin: 0;
+        .video-uploader {
+            margin: 0 0 13px;
+
             color: #aaa;
-            font-size: 14px;
+            font-size: 13px;
         }
 
+        /* ======================================================
+           FIVE STAR RATING
+           ====================================================== */
+
+        .rating-area {
+            padding-top: 12px;
+            border-top: 1px solid #333;
+        }
+
+        .rating-label {
+            margin: 0 0 8px;
+
+            color: #bbb;
+            font-size: 13px;
+        }
+
+        .stars {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+
+            margin-bottom: 7px;
+        }
+
+        .star-btn {
+            border: 0;
+            background: transparent;
+
+            padding: 0 2px;
+
+            color: #555;
+            font-size: 29px;
+            line-height: 1;
+
+            transition:
+                color 0.12s ease,
+                transform 0.12s ease;
+        }
+
+        .star-btn:hover {
+            transform: scale(1.12);
+        }
+
+        .star-btn.active {
+            color: #f5c518;
+        }
+
+        .rating-summary {
+            margin: 0;
+
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .your-rating {
+            margin-left: 5px;
+            color: #ddd;
+        }
+
+        /* ======================================================
+           VIDEO ACTIONS
+           ====================================================== */
+
         .video-actions {
-            margin-top: 12px;
+            margin-top: 13px;
+
             display: flex;
             justify-content: flex-end;
         }
 
-        .delete-btn {
-            background-color: #303030;
+        .remove-btn {
+            border: 0;
+            border-radius: 4px;
+
+            background: #333;
             color: #ddd;
+
             padding: 7px 10px;
+
             font-size: 12px;
         }
 
-        .delete-btn:hover {
-            background-color: #555;
+        .remove-btn:hover {
+            background: #555;
         }
 
-        .empty-message {
-            background-color: #1c1c1c;
-            color: #aaa;
-            border-radius: 8px;
-            padding: 30px;
-            text-align: center;
+        .empty-message,
+        .loading-message {
             grid-column: 1 / -1;
+
+            padding: 35px;
+
+            background: #1c1c1c;
+            border-radius: 8px;
+
+            color: #aaa;
+            text-align: center;
         }
+
+        /* ======================================================
+           RESPONSIVE
+           ====================================================== */
 
         @media (max-width: 800px) {
             .creator-form {
@@ -277,11 +435,11 @@
             }
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 550px) {
             .navbar {
                 align-items: flex-start;
-                gap: 10px;
                 flex-direction: column;
+                gap: 8px;
             }
 
             .user-controls {
@@ -290,11 +448,11 @@
             }
 
             .content-wrapper {
-                padding: 15px;
+                padding: 18px 14px 40px;
             }
 
-            .card {
-                padding: 25px;
+            .auth-card {
+                padding: 25px 20px;
             }
 
             .video-grid {
@@ -306,11 +464,22 @@
 
 <body>
 
+    <!-- ========================================================
+         NAVIGATION
+         ======================================================== -->
+
     <header class="navbar">
-        <div class="logo">🎥 MyVideoNet</div>
+
+        <div class="logo">
+            🎥 MyVideoNet
+        </div>
 
         <div class="user-controls">
-            <span id="user-display" class="hidden"></span>
+
+            <span
+                id="user-display"
+                class="hidden"
+            ></span>
 
             <button
                 id="logout-btn"
@@ -319,81 +488,117 @@
             >
                 Log Out
             </button>
+
         </div>
+
     </header>
+
 
     <main class="content-wrapper">
 
-        <!-- LOGIN / REGISTRATION -->
 
-        <section id="auth-section" class="auth-container">
-            <div class="card">
+        <!-- ====================================================
+             AUTHENTICATION
+             ==================================================== -->
 
-                <h2 id="form-title">
+        <section
+            id="auth-section"
+            class="auth-container"
+        >
+
+            <div class="auth-card">
+
+                <h1 id="auth-title">
                     Join MyVideoNet
-                </h2>
+                </h1>
 
-                <p id="form-desc">
-                    Create a free account to instantly unlock trending content.
+                <p
+                    id="auth-description"
+                    class="auth-description"
+                >
+                    Create an account to publish videos and rate
+                    the MyVideoNet community's favorites.
                 </p>
 
-                <form id="login-form">
+                <form
+                    id="auth-form"
+                    class="auth-form"
+                >
 
                     <input
+                        id="email-input"
+                        class="text-input"
                         type="email"
-                        id="user-email"
-                        placeholder="Enter Your Email Address"
+                        placeholder="Email address"
                         autocomplete="email"
                         required
                     >
 
                     <input
+                        id="password-input"
+                        class="text-input"
                         type="password"
-                        id="user-password"
-                        placeholder="Create Secure Password"
+                        placeholder="Password"
                         autocomplete="current-password"
+                        minlength="6"
                         required
                     >
 
                     <button
+                        id="auth-submit-btn"
+                        class="primary-btn"
                         type="submit"
-                        id="submit-btn"
                     >
                         Create Account
                     </button>
 
                 </form>
 
-                <p
-                    id="toggle-text"
-                    style="margin-top: 15px; margin-bottom: 0;"
-                >
-                    Already a member?
-                    <span id="toggle-link">
-                        Log In Here
+                <div
+                    id="auth-message"
+                    class="message"
+                    aria-live="polite"
+                ></div>
+
+                <p class="auth-switch">
+
+                    <span id="auth-switch-text">
+                        Already a member?
                     </span>
+
+                    <button
+                        id="toggle-auth-btn"
+                        class="link-button"
+                        type="button"
+                    >
+                        Log In Here
+                    </button>
+
                 </p>
 
             </div>
+
         </section>
 
 
-        <!-- LOGGED-IN DASHBOARD -->
+        <!-- ====================================================
+             DASHBOARD
+             ==================================================== -->
 
         <section
-            id="video-section"
-            class="video-section hidden"
+            id="dashboard-section"
+            class="hidden"
         >
-
-            <!-- CREATOR STUDIO -->
 
             <section class="creator-studio">
 
-                <h2>Creator Studio</h2>
+                <h2>
+                    Creator Studio
+                </h2>
 
-                <p class="creator-studio-description">
-                    Paste a YouTube video link, give it a title,
-                    and publish it to MyVideoNet.
+                <p class="creator-description">
+                    Paste a YouTube link and publish it directly
+                    to the shared MyVideoNet database.
                 </p>
 
                 <form
@@ -402,36 +607,40 @@
                 >
 
                     <input
-                        type="text"
                         id="video-title"
-                        placeholder="Video title"
+                        class="text-input"
+                        type="text"
                         maxlength="150"
+                        placeholder="Video title"
                         required
                     >
 
                     <input
-                        type="url"
                         id="video-url"
-                        placeholder="https://www.youtube.com/watch?v=..."
+                        class="text-input"
+                        type="text"
+                        placeholder="Paste a YouTube link"
                         required
                     >
 
-                    <button type="submit">
+                    <button
+                        id="publish-btn"
+                        class="primary-btn"
+                        type="submit"
+                    >
                         Publish Video
                     </button>
 
                 </form>
 
-                <p
+                <div
                     id="creator-message"
-                    class="form-message"
+                    class="message"
                     aria-live="polite"
-                ></p>
+                ></div>
 
             </section>
 
-
-            <!-- TRENDING VIDEOS -->
 
             <h2 class="section-title">
                 Trending Videos
@@ -446,12 +655,24 @@
 
     </main>
 
+
+    <!-- ========================================================
+         SUPABASE JAVASCRIPT LIBRARY
+
+         IMPORTANT:
+         This MUST load before our own JavaScript below.
+         ======================================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
+
     <script>
         "use strict";
 
-        const USER_STORAGE_KEY = "myVideoNetUser";
+
+        /* ======================================================
+           SUPABASE
+           ====================================================== */
 
         const SUPABASE_URL =
             "https://nnwcwfsgjduipbalwjhi.supabase.co";
@@ -459,215 +680,577 @@
         const SUPABASE_PUBLISHABLE_KEY =
             "sb_publishable_cBk88lLLm_T52T8s6kYFag_Qw-iya5T";
 
+
         const supabaseClient =
             window.supabase.createClient(
                 SUPABASE_URL,
-                SUPABASE_PUBLISHABLE_KEY
+                SUPABASE_PUBLISHABLE_KEY,
+                {
+                    auth: {
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                }
             );
 
-        let isLoginMode = false;
 
-        /*
-        ============================================================
-        PAGE STARTUP
-        ============================================================
-        */
+        /* ======================================================
+           APPLICATION STATE
+           ====================================================== */
 
-        document.addEventListener("DOMContentLoaded", function () {
+        let loginMode = false;
 
-            const savedEmail =
-                localStorage.getItem(USER_STORAGE_KEY);
+        let currentUser = null;
 
-            if (savedEmail) {
-                showDashboard(savedEmail);
+
+        /* ======================================================
+           DOM REFERENCES
+           ====================================================== */
+
+        const authSection =
+            document.getElementById("auth-section");
+
+        const dashboardSection =
+            document.getElementById("dashboard-section");
+
+        const authForm =
+            document.getElementById("auth-form");
+
+        const emailInput =
+            document.getElementById("email-input");
+
+        const passwordInput =
+            document.getElementById("password-input");
+
+        const authTitle =
+            document.getElementById("auth-title");
+
+        const authDescription =
+            document.getElementById("auth-description");
+
+        const authSubmitBtn =
+            document.getElementById("auth-submit-btn");
+
+        const toggleAuthBtn =
+            document.getElementById("toggle-auth-btn");
+
+        const authSwitchText =
+            document.getElementById("auth-switch-text");
+
+        const authMessage =
+            document.getElementById("auth-message");
+
+        const logoutBtn =
+            document.getElementById("logout-btn");
+
+        const userDisplay =
+            document.getElementById("user-display");
+
+        const creatorForm =
+            document.getElementById("creator-form");
+
+        const videoTitleInput =
+            document.getElementById("video-title");
+
+        const videoUrlInput =
+            document.getElementById("video-url");
+
+        const publishBtn =
+            document.getElementById("publish-btn");
+
+        const creatorMessage =
+            document.getElementById("creator-message");
+
+        const videoGrid =
+            document.getElementById("video-grid");
+
+
+        /* ======================================================
+           START APPLICATION
+           ====================================================== */
+
+        initializeApp();
+
+
+        async function initializeApp() {
+
+            try {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth.getSession();
+
+
+                if (error) {
+                    console.error(
+                        "Session check failed:",
+                        error
+                    );
+                }
+
+
+                currentUser =
+                    data &&
+                    data.session
+                        ? data.session.user
+                        : null;
+
+
+                updateScreen();
+
+
+            } catch (error) {
+
+                console.error(
+                    "MyVideoNet startup error:",
+                    error
+                );
+
+                showAuthMessage(
+                    "MyVideoNet could not connect to the account service. Please refresh the page.",
+                    "error"
+                );
             }
-
-            document
-                .getElementById("login-form")
-                .addEventListener("submit", handleAuth);
-
-            document
-                .getElementById("toggle-link")
-                .addEventListener("click", toggleMode);
-
-            document
-                .getElementById("logout-btn")
-                .addEventListener("click", logoutUser);
-
-            document
-                .getElementById("creator-form")
-                .addEventListener("submit", publishVideo);
-        });
+        }
 
 
-        /*
-        ============================================================
-        LOGIN / ACCOUNT SCREEN
-        ============================================================
-        */
+        /* ======================================================
+           AUTH EVENT LISTENER
+           ====================================================== */
 
-        function toggleMode() {
+        supabaseClient.auth.onAuthStateChange(
+            function (event, session) {
 
-            isLoginMode = !isLoginMode;
-
-            const formTitle =
-                document.getElementById("form-title");
-
-            const formDesc =
-                document.getElementById("form-desc");
-
-            const submitBtn =
-                document.getElementById("submit-btn");
-
-            const toggleText =
-                document.getElementById("toggle-text");
+                currentUser =
+                    session
+                        ? session.user
+                        : null;
 
 
-            if (isLoginMode) {
+                updateScreen();
+            }
+        );
 
-                formTitle.textContent =
-                    "Log Into MyVideoNet";
 
-                formDesc.textContent =
-                    "Enter your credentials to access your user portal.";
+        /* ======================================================
+           SHOW CORRECT SCREEN
+           ====================================================== */
 
-                submitBtn.textContent =
-                    "Log In";
+        function updateScreen() {
 
-                toggleText.innerHTML =
-                    'Need an account? <span id="toggle-link">Create Account</span>';
+            if (currentUser) {
+
+                authSection.classList.add("hidden");
+
+                dashboardSection.classList.remove("hidden");
+
+                userDisplay.classList.remove("hidden");
+
+                logoutBtn.classList.remove("hidden");
+
+
+                userDisplay.textContent =
+                    currentUser.email || "MyVideoNet User";
+
+
+                renderVideos();
 
             } else {
 
-                formTitle.textContent =
-                    "Join MyVideoNet";
+                dashboardSection.classList.add("hidden");
 
-                formDesc.textContent =
-                    "Create a free account to instantly unlock trending content.";
+                authSection.classList.remove("hidden");
 
-                submitBtn.textContent =
-                    "Create Account";
+                userDisplay.classList.add("hidden");
 
-                toggleText.innerHTML =
-                    'Already a member? <span id="toggle-link">Log In Here</span>';
+                logoutBtn.classList.add("hidden");
+
+
+                videoGrid.replaceChildren();
             }
-
-
-            document
-                .getElementById("toggle-link")
-                .addEventListener("click", toggleMode);
         }
 
 
-        function handleAuth(event) {
+        /* ======================================================
+           SWITCH LOGIN / REGISTRATION
+           ====================================================== */
+
+        toggleAuthBtn.addEventListener(
+            "click",
+            function () {
+
+                loginMode =
+                    !loginMode;
+
+
+                clearAuthMessage();
+
+
+                if (loginMode) {
+
+                    authTitle.textContent =
+                        "Log Into MyVideoNet";
+
+                    authDescription.textContent =
+                        "Enter your email and password to access your account.";
+
+                    authSubmitBtn.textContent =
+                        "Log In";
+
+                    authSwitchText.textContent =
+                        "Need an account?";
+
+                    toggleAuthBtn.textContent =
+                        "Create Account";
+
+                } else {
+
+                    authTitle.textContent =
+                        "Join MyVideoNet";
+
+                    authDescription.textContent =
+                        "Create an account to publish videos and rate the MyVideoNet community's favorites.";
+
+                    authSubmitBtn.textContent =
+                        "Create Account";
+
+                    authSwitchText.textContent =
+                        "Already a member?";
+
+                    toggleAuthBtn.textContent =
+                        "Log In Here";
+                }
+            }
+        );
+
+
+        /* ======================================================
+           REGISTER / LOGIN
+           ====================================================== */
+
+        authForm.addEventListener(
+            "submit",
+            handleAuthentication
+        );
+
+
+        async function handleAuthentication(event) {
 
             event.preventDefault();
 
-            const emailInput =
-                document.getElementById("user-email");
+
+            clearAuthMessage();
+
 
             const email =
-                emailInput.value.trim();
+                emailInput.value
+                    .trim()
+                    .toLowerCase();
 
-            if (!email) {
+            const password =
+                passwordInput.value;
+
+
+            if (!email || !password) {
+
+                showAuthMessage(
+                    "Please enter your email and password.",
+                    "error"
+                );
+
                 return;
             }
 
-            localStorage.setItem(
-                USER_STORAGE_KEY,
-                email
-            );
 
-            showDashboard(email);
+            if (password.length < 6) {
+
+                showAuthMessage(
+                    "Your password must contain at least 6 characters.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            setAuthLoading(true);
+
+
+            try {
+
+                if (loginMode) {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient.auth
+                            .signInWithPassword({
+                                email: email,
+                                password: password
+                            });
+
+
+                    if (error) {
+                        throw error;
+                    }
+
+
+                    if (!data.user) {
+                        throw new Error(
+                            "Login did not return a user account."
+                        );
+                    }
+
+
+                    currentUser =
+                        data.user;
+
+
+                    authForm.reset();
+
+                    clearAuthMessage();
+
+                    updateScreen();
+
+                } else {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient.auth
+                            .signUp({
+                                email: email,
+                                password: password
+                            });
+
+
+                    if (error) {
+                        throw error;
+                    }
+
+
+                    /*
+                    Supabase projects can be configured either
+                    to log a new user in immediately or require
+                    an email confirmation first.
+
+                    This code safely handles both configurations.
+                    */
+
+                    if (data.session && data.user) {
+
+                        currentUser =
+                            data.user;
+
+                        authForm.reset();
+
+                        showAuthMessage(
+                            "Account created successfully.",
+                            "success"
+                        );
+
+                        updateScreen();
+
+                    } else {
+
+                        showAuthMessage(
+                            "Account created. Check your email for a confirmation message, confirm the account, then return here and log in.",
+                            "success"
+                        );
+
+                        loginMode = true;
+
+                        authTitle.textContent =
+                            "Log Into MyVideoNet";
+
+                        authDescription.textContent =
+                            "After confirming your email, log in with your new account.";
+
+                        authSubmitBtn.textContent =
+                            "Log In";
+
+                        authSwitchText.textContent =
+                            "Need another account?";
+
+                        toggleAuthBtn.textContent =
+                            "Create Account";
+                    }
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Authentication error:",
+                    error
+                );
+
+
+                showAuthMessage(
+                    getFriendlyAuthError(error),
+                    "error"
+                );
+
+
+            } finally {
+
+                setAuthLoading(false);
+            }
         }
 
 
-        function showDashboard(email) {
+        function getFriendlyAuthError(error) {
 
-            document
-                .getElementById("auth-section")
-                .classList.add("hidden");
-
-            document
-                .getElementById("video-section")
-                .classList.remove("hidden");
+            const message =
+                error &&
+                error.message
+                    ? error.message
+                    : "";
 
 
-            const userDisplay =
-                document.getElementById("user-display");
-
-            const logoutBtn =
-                document.getElementById("logout-btn");
-
-
-            userDisplay.textContent = email;
-
-            userDisplay.classList.remove("hidden");
-
-            logoutBtn.classList.remove("hidden");
+            if (
+                message
+                    .toLowerCase()
+                    .includes("invalid login credentials")
+            ) {
+                return "The email or password is incorrect.";
+            }
 
 
-            renderVideos();
+            if (
+                message
+                    .toLowerCase()
+                    .includes("email not confirmed")
+            ) {
+                return "Please confirm your email before logging in.";
+            }
+
+
+            if (
+                message
+                    .toLowerCase()
+                    .includes("already registered")
+            ) {
+                return "An account with that email already exists. Try logging in instead.";
+            }
+
+
+            if (message) {
+                return message;
+            }
+
+
+            return "The account request failed. Please try again.";
         }
 
 
-        function logoutUser() {
+        function setAuthLoading(isLoading) {
 
-            /*
-            This removes the login session only.
+            authSubmitBtn.disabled =
+                isLoading;
 
-            Uploaded videos are intentionally NOT removed,
-            so they remain saved after logging back in.
-            */
 
-            localStorage.removeItem(USER_STORAGE_KEY);
+            if (isLoading) {
 
-            document
-                .getElementById("video-section")
-                .classList.add("hidden");
+                authSubmitBtn.textContent =
+                    loginMode
+                        ? "Logging In..."
+                        : "Creating Account...";
 
-            document
-                .getElementById("auth-section")
-                .classList.remove("hidden");
+            } else {
 
-            document
-                .getElementById("user-display")
-                .classList.add("hidden");
-
-            document
-                .getElementById("logout-btn")
-                .classList.add("hidden");
-
-            document
-                .getElementById("login-form")
-                .reset();
+                authSubmitBtn.textContent =
+                    loginMode
+                        ? "Log In"
+                        : "Create Account";
+            }
         }
 
 
-        /*
-        ============================================================
-        YOUTUBE URL PARSER
-        ============================================================
+        /* ======================================================
+           LOG OUT
+           ====================================================== */
 
-        Supported examples:
+        logoutBtn.addEventListener(
+            "click",
+            async function () {
 
-        https://www.youtube.com/watch?v=VIDEO_ID
-        https://youtube.com/watch?v=VIDEO_ID
-        https://m.youtube.com/watch?v=VIDEO_ID
+                logoutBtn.disabled =
+                    true;
 
-        https://youtu.be/VIDEO_ID
-        https://youtu.be/VIDEO_ID?t=20
 
-        https://www.youtube.com/shorts/VIDEO_ID
-        https://youtube.com/shorts/VIDEO_ID
+                try {
 
-        https://www.youtube.com/embed/VIDEO_ID
+                    const {
+                        error
+                    } =
+                        await supabaseClient.auth.signOut();
 
-        https://www.youtube.com/live/VIDEO_ID
 
-        youtube.com/watch?v=VIDEO_ID
-        youtu.be/VIDEO_ID
-        */
+                    if (error) {
+                        throw error;
+                    }
+
+
+                    currentUser =
+                        null;
+
+
+                    updateScreen();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Logout error:",
+                        error
+                    );
+
+                    alert(
+                        "Could not log out. Please try again."
+                    );
+
+                } finally {
+
+                    logoutBtn.disabled =
+                        false;
+                }
+            }
+        );
+
+
+        /* ======================================================
+           AUTH MESSAGES
+           ====================================================== */
+
+        function showAuthMessage(text, type) {
+
+            authMessage.textContent =
+                text;
+
+            authMessage.className =
+                "message " + type;
+        }
+
+
+        function clearAuthMessage() {
+
+            authMessage.textContent =
+                "";
+
+            authMessage.className =
+                "message";
+        }
+
+
+        /* ======================================================
+           YOUTUBE URL PARSER
+           ====================================================== */
 
         function extractYouTubeVideoId(input) {
 
@@ -675,7 +1258,10 @@
                 return null;
             }
 
-            let value = input.trim();
+
+            let value =
+                input.trim();
+
 
             if (!value) {
                 return null;
@@ -683,23 +1269,34 @@
 
 
             /*
-            Add https:// if the user pasted a valid
-            YouTube address without the protocol.
+            Also accept a raw 11-character YouTube video ID.
             */
 
             if (
-                !value.startsWith("http://") &&
-                !value.startsWith("https://")
+                /^[A-Za-z0-9_-]{11}$/.test(value)
             ) {
-                value = "https://" + value;
+                return value;
+            }
+
+
+            if (
+                !/^https?:\/\//i.test(value)
+            ) {
+                value =
+                    "https://" + value;
             }
 
 
             let url;
 
+
             try {
-                url = new URL(value);
+
+                url =
+                    new URL(value);
+
             } catch (error) {
+
                 return null;
             }
 
@@ -710,28 +1307,29 @@
                     .replace(/^www\./, "");
 
 
-            let videoId = null;
+            let videoId =
+                null;
 
 
             /*
-            ------------------------------------------
             youtu.be/VIDEO_ID
-            ------------------------------------------
             */
 
             if (hostname === "youtu.be") {
 
-                videoId =
+                const pieces =
                     url.pathname
                         .split("/")
-                        .filter(Boolean)[0] || null;
+                        .filter(Boolean);
+
+
+                videoId =
+                    pieces[0] || null;
             }
 
 
             /*
-            ------------------------------------------
-            youtube.com formats
-            ------------------------------------------
+            All supported YouTube domains.
             */
 
             else if (
@@ -742,73 +1340,72 @@
             ) {
 
                 /*
-                Standard:
+                Normal:
                 youtube.com/watch?v=VIDEO_ID
                 */
 
-                if (url.pathname === "/watch") {
+                const queryVideoId =
+                    url.searchParams.get("v");
+
+
+                if (queryVideoId) {
 
                     videoId =
-                        url.searchParams.get("v");
+                        queryVideoId;
+
+                } else {
+
+                    const pieces =
+                        url.pathname
+                            .split("/")
+                            .filter(Boolean);
+
+
+                    const acceptedPrefixes =
+                        [
+                            "shorts",
+                            "embed",
+                            "live",
+                            "v",
+                            "e"
+                        ];
+
+
+                    if (
+                        pieces.length >= 2 &&
+                        acceptedPrefixes.includes(
+                            pieces[0].toLowerCase()
+                        )
+                    ) {
+
+                        videoId =
+                            pieces[1];
+                    }
                 }
 
 
                 /*
-                Shorts:
-                youtube.com/shorts/VIDEO_ID
+                Older attribution links can contain another
+                YouTube URL inside the "u" parameter.
                 */
 
-                else if (
-                    url.pathname.startsWith("/shorts/")
-                ) {
+                if (!videoId) {
 
-                    videoId =
-                        url.pathname
-                            .split("/")
-                            .filter(Boolean)[1] || null;
-                }
+                    const nestedUrl =
+                        url.searchParams.get("u");
 
 
-                /*
-                Embed:
-                youtube.com/embed/VIDEO_ID
-                */
+                    if (nestedUrl) {
 
-                else if (
-                    url.pathname.startsWith("/embed/")
-                ) {
-
-                    videoId =
-                        url.pathname
-                            .split("/")
-                            .filter(Boolean)[1] || null;
-                }
-
-
-                /*
-                Live:
-                youtube.com/live/VIDEO_ID
-                */
-
-                else if (
-                    url.pathname.startsWith("/live/")
-                ) {
-
-                    videoId =
-                        url.pathname
-                            .split("/")
-                            .filter(Boolean)[1] || null;
+                        videoId =
+                            extractYouTubeVideoId(
+                                "https://youtube.com" +
+                                nestedUrl
+                            );
+                    }
                 }
             }
 
-
-            /*
-            YouTube video IDs use 11 characters consisting
-            of letters, numbers, underscores, and hyphens.
-
-            This also prevents arbitrary HTML or JavaScript
-            from being inserted into our iframe URL.
-            */
 
             if (
                 videoId &&
@@ -822,116 +1419,41 @@
         }
 
 
-        /*
-        ============================================================
-        VIDEO STORAGE
-        ============================================================
-        */
+        /* ======================================================
+           PUBLISH VIDEO
+           ====================================================== */
 
-        function getSavedVideos() {
-
-            const rawVideos =
-                localStorage.getItem(VIDEO_STORAGE_KEY);
-
-            if (!rawVideos) {
-                return [];
-            }
+        creatorForm.addEventListener(
+            "submit",
+            publishVideo
+        );
 
 
-            try {
-
-                const parsedVideos =
-                    JSON.parse(rawVideos);
-
-                if (!Array.isArray(parsedVideos)) {
-                    return [];
-                }
-
-
-                /*
-                Validate stored data before using it.
-                */
-
-                return parsedVideos.filter(function (video) {
-
-                    return (
-                        video &&
-                        typeof video.id === "string" &&
-                        /^[A-Za-z0-9_-]{11}$/.test(video.id) &&
-                        typeof video.title === "string"
-                    );
-                });
-
-            } catch (error) {
-
-                console.error(
-                    "Could not read saved videos:",
-                    error
-                );
-
-                return [];
-            }
-        }
-
-
-        function saveVideos(videos) {
-
-            try {
-
-                localStorage.setItem(
-                    VIDEO_STORAGE_KEY,
-                    JSON.stringify(videos)
-                );
-
-                return true;
-
-            } catch (error) {
-
-                console.error(
-                    "Could not save videos:",
-                    error
-                );
-
-                return false;
-            }
-        }
-
-
-        /*
-        ============================================================
-        PUBLISH VIDEO
-        ============================================================
-        */
-
-        function publishVideo(event) {
+        async function publishVideo(event) {
 
             event.preventDefault();
 
 
-            const titleInput =
-                document.getElementById("video-title");
+            clearCreatorMessage();
 
-            const urlInput =
-                document.getElementById("video-url");
 
-            const message =
-                document.getElementById("creator-message");
+            if (!currentUser) {
+
+                showCreatorMessage(
+                    "Please log in before publishing a video.",
+                    "error"
+                );
+
+                return;
+            }
 
 
             const title =
-                titleInput.value.trim();
+                videoTitleInput.value.trim();
 
             const youtubeUrl =
-                urlInput.value.trim();
+                videoUrlInput.value.trim();
 
-
-            message.textContent = "";
-            message.className = "form-message";
-
-
-            /*
-            Check title.
-            */
 
             if (!title) {
 
@@ -944,18 +1466,10 @@
             }
 
 
-            /*
-            Parse YouTube URL.
-            */
-
-            const videoId =
-                extractYouTubeVideoId(youtubeUrl);
-
-
-            if (!videoId) {
+            if (title.length > 150) {
 
                 showCreatorMessage(
-                    "That does not look like a valid YouTube video link. Try a normal YouTube, youtu.be, Shorts, Live, or Embed link.",
+                    "Video titles may contain up to 150 characters.",
                     "error"
                 );
 
@@ -963,24 +1477,16 @@
             }
 
 
-            const savedVideos =
-                getSavedVideos();
+            const youtubeId =
+                extractYouTubeVideoId(
+                    youtubeUrl
+                );
 
 
-            /*
-            Do not add the exact same YouTube video twice.
-            */
-
-            const alreadyExists =
-                savedVideos.some(function (video) {
-                    return video.id === videoId;
-                });
-
-
-            if (alreadyExists) {
+            if (!youtubeId) {
 
                 showCreatorMessage(
-                    "That video has already been posted.",
+                    "That is not a valid YouTube video link.",
                     "error"
                 );
 
@@ -988,229 +1494,361 @@
             }
 
 
-            const currentUser =
-                localStorage.getItem(USER_STORAGE_KEY);
+            publishBtn.disabled =
+                true;
+
+            publishBtn.textContent =
+                "Publishing...";
 
 
-            const newVideo = {
+            try {
 
-                /*
-                Unique MyVideoNet post ID
-                */
-
-                postId:
-                    "video_" +
-                    Date.now() +
-                    "_" +
-                    Math.random()
-                        .toString(36)
-                        .slice(2, 10),
-
-                /*
-                YouTube video ID
-                */
-
-                id: videoId,
-
-                /*
-                User-entered title
-                */
-
-                title: title,
-
-                /*
-                Person who posted it
-                */
-
-                uploader:
-                    currentUser || "MyVideoNet User",
-
-                /*
-                Date posted
-                */
-
-                createdAt:
-                    new Date().toISOString()
-            };
+                const uploaderName =
+                    createDisplayName(
+                        currentUser.email
+                    );
 
 
-            /*
-            Put newest videos first.
-            */
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from("videos")
+                        .insert({
+                            youtube_id:
+                                youtubeId,
 
-            savedVideos.unshift(newVideo);
+                            title:
+                                title,
+
+                            uploader:
+                                uploaderName,
+
+                            user_id:
+                                currentUser.id
+                        });
 
 
-            const didSave =
-                saveVideos(savedVideos);
+                if (error) {
+
+                    if (
+                        error.code === "23505"
+                    ) {
+
+                        showCreatorMessage(
+                            "That YouTube video has already been posted.",
+                            "error"
+                        );
+
+                        return;
+                    }
 
 
-            if (!didSave) {
+                    throw error;
+                }
+
+
+                creatorForm.reset();
+
 
                 showCreatorMessage(
-                    "Your browser could not save the video. Browser storage may be full or disabled.",
+                    "Video published successfully!",
+                    "success"
+                );
+
+
+                await renderVideos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Publish error:",
+                    error
+                );
+
+
+                showCreatorMessage(
+                    error.message ||
+                    "The video could not be published.",
                     "error"
                 );
 
-                return;
+
+            } finally {
+
+                publishBtn.disabled =
+                    false;
+
+                publishBtn.textContent =
+                    "Publish Video";
+            }
+        }
+
+
+        function createDisplayName(email) {
+
+            if (
+                typeof email !== "string" ||
+                !email.includes("@")
+            ) {
+                return "MyVideoNet User";
             }
 
 
-            /*
-            Clear form after successful posting.
-            */
-
-            document
-                .getElementById("creator-form")
-                .reset();
+            const name =
+                email
+                    .split("@")[0]
+                    .trim()
+                    .slice(0, 100);
 
 
-            showCreatorMessage(
-                "Video published successfully!",
-                "success"
+            return (
+                name ||
+                "MyVideoNet User"
             );
-
-
-            /*
-            Immediately rebuild the video grid.
-            */
-
-            renderVideos();
         }
 
 
         function showCreatorMessage(text, type) {
 
-            const message =
-                document.getElementById("creator-message");
+            creatorMessage.textContent =
+                text;
 
-            message.textContent = text;
-
-            message.className =
-                "form-message " + type;
+            creatorMessage.className =
+                "message " + type;
         }
 
 
-        /*
-        ============================================================
-        DISPLAY SAVED VIDEOS
-        ============================================================
-        */
+        function clearCreatorMessage() {
 
-        function renderVideos() {
+            creatorMessage.textContent =
+                "";
 
-            const grid =
-                document.getElementById("video-grid");
-
-            const videos =
-                getSavedVideos();
+            creatorMessage.className =
+                "message";
+        }
 
 
-            /*
-            Remove everything currently displayed
-            before rebuilding the grid.
-            */
+        /* ======================================================
+           LOAD VIDEOS + RATINGS
+           ====================================================== */
 
-            grid.replaceChildren();
+        async function renderVideos() {
+
+            videoGrid.replaceChildren();
 
 
-            if (videos.length === 0) {
+            const loading =
+                document.createElement("div");
 
-                const emptyMessage =
+            loading.className =
+                "loading-message";
+
+            loading.textContent =
+                "Loading videos...";
+
+
+            videoGrid.appendChild(
+                loading
+            );
+
+
+            try {
+
+                /*
+                Download videos and ratings from Supabase.
+                They are no longer loaded from your old
+                MyVideoNet localStorage objects.
+                */
+
+                const [
+                    videosResult,
+                    ratingsResult
+                ] =
+                    await Promise.all([
+
+                        supabaseClient
+                            .from("videos")
+                            .select(
+                                "id, youtube_id, title, uploader, user_id, created_at"
+                            )
+                            .order(
+                                "created_at",
+                                {
+                                    ascending: false
+                                }
+                            ),
+
+                        supabaseClient
+                            .from("ratings")
+                            .select(
+                                "id, video_id, voter_id, rating"
+                            )
+                    ]);
+
+
+                if (videosResult.error) {
+                    throw videosResult.error;
+                }
+
+
+                if (ratingsResult.error) {
+                    throw ratingsResult.error;
+                }
+
+
+                const videos =
+                    videosResult.data || [];
+
+                const ratings =
+                    ratingsResult.data || [];
+
+
+                videoGrid.replaceChildren();
+
+
+                if (videos.length === 0) {
+
+                    const empty =
+                        document.createElement("div");
+
+                    empty.className =
+                        "empty-message";
+
+                    empty.textContent =
+                        "No videos have been posted yet. Publish the first video using Creator Studio above.";
+
+
+                    videoGrid.appendChild(
+                        empty
+                    );
+
+                    return;
+                }
+
+
+                for (const video of videos) {
+
+                    const videoRatings =
+                        ratings.filter(
+                            function (rating) {
+
+                                return (
+                                    Number(
+                                        rating.video_id
+                                    ) ===
+                                    Number(
+                                        video.id
+                                    )
+                                );
+                            }
+                        );
+
+
+                    const card =
+                        createVideoCard(
+                            video,
+                            videoRatings
+                        );
+
+
+                    videoGrid.appendChild(
+                        card
+                    );
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Video loading error:",
+                    error
+                );
+
+
+                videoGrid.replaceChildren();
+
+
+                const failed =
                     document.createElement("div");
 
-                emptyMessage.className =
+                failed.className =
                     "empty-message";
 
-                emptyMessage.textContent =
-                    "No videos have been posted yet. Use Creator Studio above to publish the first video.";
+                failed.textContent =
+                    "MyVideoNet could not load the online video database. " +
+                    (
+                        error.message ||
+                        "Please try refreshing the page."
+                    );
 
-                grid.appendChild(emptyMessage);
 
-                return;
+                videoGrid.appendChild(
+                    failed
+                );
             }
-
-
-            videos.forEach(function (video) {
-
-                const card =
-                    createVideoCard(video);
-
-                grid.appendChild(card);
-            });
         }
 
 
-        /*
-        ============================================================
-        CREATE ONE VIDEO CARD
-        ============================================================
-        */
+        /* ======================================================
+           CREATE VIDEO CARD
+           ====================================================== */
 
-        function createVideoCard(video) {
-
-            /*
-            Outer card
-            */
+        function createVideoCard(
+            video,
+            videoRatings
+        ) {
 
             const card =
-                document.createElement("article");
+                document.createElement(
+                    "article"
+                );
 
             card.className =
                 "video-card";
 
 
-            /*
-            Player container
-            */
+            /* YouTube player */
 
             const playerContainer =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             playerContainer.className =
                 "video-container";
 
 
-            /*
-            YouTube iframe
-            */
-
             const iframe =
-                document.createElement("iframe");
+                document.createElement(
+                    "iframe"
+                );
 
-
-            /*
-            Only our already-validated 11-character
-            YouTube ID is inserted here.
-            */
 
             iframe.src =
                 "https://www.youtube-nocookie.com/embed/" +
-                encodeURIComponent(video.id);
+                encodeURIComponent(
+                    video.youtube_id
+                );
 
 
             iframe.title =
-                video.title + " - YouTube video player";
+                video.title +
+                " - YouTube video player";
 
-            iframe.setAttribute(
-                "frameborder",
-                "0"
-            );
 
             iframe.setAttribute(
                 "allow",
                 "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             );
 
-            iframe.setAttribute(
-                "referrerpolicy",
-                "strict-origin-when-cross-origin"
-            );
 
             iframe.setAttribute(
                 "allowfullscreen",
                 ""
             );
+
 
             iframe.setAttribute(
                 "loading",
@@ -1218,115 +1856,523 @@
             );
 
 
-            playerContainer.appendChild(iframe);
+            iframe.setAttribute(
+                "referrerpolicy",
+                "strict-origin-when-cross-origin"
+            );
 
 
-            /*
-            Information area
-            */
+            playerContainer.appendChild(
+                iframe
+            );
+
+
+            /* Information */
 
             const info =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             info.className =
                 "video-info";
 
 
             const title =
-                document.createElement("h3");
+                document.createElement(
+                    "h3"
+                );
 
-
-            /*
-            textContent is intentional.
-
-            It displays the user's title as plain text
-            instead of interpreting it as HTML.
-            */
+            title.className =
+                "video-title";
 
             title.textContent =
                 video.title;
 
 
             const uploader =
-                document.createElement("p");
+                document.createElement(
+                    "p"
+                );
+
+            uploader.className =
+                "video-uploader";
 
             uploader.textContent =
-                "Uploaded by " + video.uploader;
+                "Uploaded by " +
+                (
+                    video.uploader ||
+                    "MyVideoNet User"
+                );
 
 
-            /*
-            Delete button
-            */
+            info.appendChild(
+                title
+            );
 
-            const actions =
-                document.createElement("div");
-
-            actions.className =
-                "video-actions";
-
-
-            const deleteButton =
-                document.createElement("button");
-
-            deleteButton.type =
-                "button";
-
-            deleteButton.className =
-                "delete-btn";
-
-            deleteButton.textContent =
-                "Remove Video";
-
-            deleteButton.addEventListener(
-                "click",
-                function () {
-                    deleteVideo(video.postId);
-                }
+            info.appendChild(
+                uploader
             );
 
 
-            actions.appendChild(deleteButton);
+            /* Rating */
+
+            const ratingArea =
+                createRatingArea(
+                    video,
+                    videoRatings
+                );
+
+
+            info.appendChild(
+                ratingArea
+            );
 
 
             /*
-            Assemble everything.
+            Only show Remove Video when this
+            logged-in account owns the video.
             */
 
-            info.appendChild(title);
-            info.appendChild(uploader);
-            info.appendChild(actions);
+            if (
+                currentUser &&
+                video.user_id === currentUser.id
+            ) {
 
-            card.appendChild(playerContainer);
-            card.appendChild(info);
+                const actions =
+                    document.createElement(
+                        "div"
+                    );
+
+                actions.className =
+                    "video-actions";
+
+
+                const removeBtn =
+                    document.createElement(
+                        "button"
+                    );
+
+                removeBtn.type =
+                    "button";
+
+                removeBtn.className =
+                    "remove-btn";
+
+                removeBtn.textContent =
+                    "Remove Video";
+
+
+                removeBtn.addEventListener(
+                    "click",
+                    function () {
+
+                        deleteVideo(
+                            video.id,
+                            video.title
+                        );
+                    }
+                );
+
+
+                actions.appendChild(
+                    removeBtn
+                );
+
+
+                info.appendChild(
+                    actions
+                );
+            }
+
+
+            card.appendChild(
+                playerContainer
+            );
+
+            card.appendChild(
+                info
+            );
 
 
             return card;
         }
 
 
-        /*
-        ============================================================
-        DELETE VIDEO
-        ============================================================
-        */
+        /* ======================================================
+           FIVE STAR RATING SYSTEM
+           ====================================================== */
 
-        function deleteVideo(postId) {
+        function createRatingArea(
+            video,
+            videoRatings
+        ) {
 
-            const videos =
-                getSavedVideos();
+            const area =
+                document.createElement(
+                    "div"
+                );
+
+            area.className =
+                "rating-area";
 
 
-            const updatedVideos =
-                videos.filter(function (video) {
-                    return video.postId !== postId;
-                });
+            const label =
+                document.createElement(
+                    "p"
+                );
+
+            label.className =
+                "rating-label";
+
+            label.textContent =
+                "Rate this video:";
 
 
-            saveVideos(updatedVideos);
+            area.appendChild(
+                label
+            );
 
-            renderVideos();
+
+            const stars =
+                document.createElement(
+                    "div"
+                );
+
+            stars.className =
+                "stars";
+
+
+            const myRatingObject =
+                currentUser
+                    ? videoRatings.find(
+                        function (rating) {
+
+                            return (
+                                rating.voter_id ===
+                                currentUser.id
+                            );
+                        }
+                    )
+                    : null;
+
+
+            const myRating =
+                myRatingObject
+                    ? Number(
+                        myRatingObject.rating
+                    )
+                    : 0;
+
+
+            for (
+                let starNumber = 1;
+                starNumber <= 5;
+                starNumber++
+            ) {
+
+                const star =
+                    document.createElement(
+                        "button"
+                    );
+
+                star.type =
+                    "button";
+
+                star.className =
+                    "star-btn";
+
+
+                if (
+                    starNumber <= myRating
+                ) {
+                    star.classList.add(
+                        "active"
+                    );
+                }
+
+
+                star.textContent =
+                    "★";
+
+
+                star.setAttribute(
+                    "aria-label",
+                    starNumber +
+                    (
+                        starNumber === 1
+                            ? " star"
+                            : " stars"
+                    )
+                );
+
+
+                star.title =
+                    "Rate " +
+                    starNumber +
+                    " out of 5";
+
+
+                star.addEventListener(
+                    "click",
+                    async function () {
+
+                        await rateVideo(
+                            video.id,
+                            starNumber
+                        );
+                    }
+                );
+
+
+                stars.appendChild(
+                    star
+                );
+            }
+
+
+            area.appendChild(
+                stars
+            );
+
+
+            const summary =
+                document.createElement(
+                    "p"
+                );
+
+            summary.className =
+                "rating-summary";
+
+
+            const ratingCount =
+                videoRatings.length;
+
+
+            let average =
+                0;
+
+
+            if (ratingCount > 0) {
+
+                const total =
+                    videoRatings.reduce(
+                        function (
+                            runningTotal,
+                            rating
+                        ) {
+
+                            return (
+                                runningTotal +
+                                Number(
+                                    rating.rating
+                                )
+                            );
+                        },
+                        0
+                    );
+
+
+                average =
+                    total /
+                    ratingCount;
+            }
+
+
+            if (ratingCount === 0) {
+
+                summary.textContent =
+                    "No ratings yet";
+
+            } else {
+
+                summary.textContent =
+                    average.toFixed(1) +
+                    " / 5 (" +
+                    ratingCount +
+                    (
+                        ratingCount === 1
+                            ? " rating)"
+                            : " ratings)"
+                    );
+            }
+
+
+            if (myRating > 0) {
+
+                const mine =
+                    document.createElement(
+                        "span"
+                    );
+
+                mine.className =
+                    "your-rating";
+
+                mine.textContent =
+                    "• Your rating: " +
+                    myRating +
+                    "/5";
+
+
+                summary.appendChild(
+                    mine
+                );
+            }
+
+
+            area.appendChild(
+                summary
+            );
+
+
+            return area;
         }
-        
+
+
+        async function rateVideo(
+            videoId,
+            rating
+        ) {
+
+            if (!currentUser) {
+
+                alert(
+                    "Please log in before rating videos."
+                );
+
+                return;
+            }
+
+
+            if (
+                !Number.isInteger(rating) ||
+                rating < 1 ||
+                rating > 5
+            ) {
+                return;
+            }
+
+
+            try {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from("ratings")
+                        .upsert(
+                            {
+                                video_id:
+                                    videoId,
+
+                                voter_id:
+                                    currentUser.id,
+
+                                rating:
+                                    rating
+                            },
+                            {
+                                onConflict:
+                                    "video_id,voter_id"
+                            }
+                        );
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                await renderVideos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Rating error:",
+                    error
+                );
+
+
+                alert(
+                    "Your rating could not be saved. " +
+                    (
+                        error.message ||
+                        ""
+                    )
+                );
+            }
+        }
+
+
+        /* ======================================================
+           DELETE OWN VIDEO
+           ====================================================== */
+
+        async function deleteVideo(
+            videoId,
+            title
+        ) {
+
+            if (!currentUser) {
+                return;
+            }
+
+
+            const confirmed =
+                window.confirm(
+                    'Remove "' +
+                    title +
+                    '" from MyVideoNet?'
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from("videos")
+                        .delete()
+                        .eq(
+                            "id",
+                            videoId
+                        );
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                await renderVideos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Delete error:",
+                    error
+                );
+
+
+                alert(
+                    "The video could not be removed. " +
+                    (
+                        error.message ||
+                        ""
+                    )
+                );
+            }
+        }
+
     </script>
+
 </body>
 </html>
