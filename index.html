@@ -7,22 +7,70 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Top Branding Navbar -->
     <header class="navbar">
         <div class="logo">🎥 MyVideoNet</div>
+        <div class="nav-links">
+            <a href="#join-section" class="join-btn">Register Account</a>
+        </div>
     </header>
 
-    <div class="main-layout">
-        <div class="auth-container">
+    <!-- Main Dynamic Layout Container -->
+    <main class="content-wrapper">
+        <!-- Live Video Streaming Grid Section -->
+        <section class="video-section">
+            <h2 class="section-title">Trending Videos</h2>
+            <div class="video-grid">
+                
+                <!-- Playable Video 1 (Gaming Channel) -->
+                <div class="video-card">
+                    <div class="video-container">
+                        <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <h3>Epic Gaming Highlights & Updates</h3>
+                        <p>Uploaded by CreatorPro</p>
+                    </div>
+                </div>
+
+                <!-- Playable Video 2 (Music Channel) -->
+                <div class="video-card">
+                    <div class="video-container">
+                        <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <h3>Lo-Fi Beats to Code/Relax To</h3>
+                        <p>Uploaded by ChilledWave</p>
+                    </div>
+                </div>
+
+                <!-- Playable Video 3 (Cooking Channel) -->
+                <div class="video-card">
+                    <div class="video-container">
+                        <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <h3>How to Cook the Perfect Recipe</h3>
+                        <p>Uploaded by ChefMaster</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Secure User Registration Station -->
+        <section id="join-section" class="auth-container">
             <div class="card">
-                <h2>Join MyVideoNet</h2>
-                <!-- PASTE YOUR FORMSPREE LINK IN THE ACTION BOX BELOW -->
-                <form action="https://formspree.io/f/mjybpvng" method="POST">
-                    <input type="email" name="email" placeholder="Email Address" required>
-                    <input type="password" name="password" placeholder="Choose Password" required>
-                    <button type="submit">Create Account</button>
+                <h2>Join the MyVideoNet Community</h2>
+                <p>Register below to unlock exclusive creator perks and forums!</p>
+                <!-- REPLACE THE LINK BELOW WITH YOUR ACTUAL FORMSPREE TARGET LINK -->
+                <form action="https://formspree.io" method="POST">
+                    <input type="email" name="email" placeholder="Enter Your Email Address" required>
+                    <input type="password" name="password" placeholder="Create Secure Password" required>
+                    <button type="submit">Submit Registration</button>
                 </form>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 </body>
 </html>
