@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyVideoNet - Watch & Share</title>
     <style>
-        /* Global CSS Styles Built Direct-In */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #0f0f0f !important;
@@ -106,13 +105,12 @@
         .video-info h3 { margin: 0 0 6px 0; font-size: 16px; color: #fff; }
         .video-info p { margin: 0; color: #aaa; font-size: 14px; }
         .hidden { display: none !important; }
-        #logout-btn { background-color: #3d3d3d; padding: 6px 12px; font-size: 13px; color: white; border-radius: 4px; }
+        #logout-btn { background-color: #3d3d3d; padding: 6px 12px; font-size: 13px; color: white; border-radius: 4px; border: none; cursor: pointer; }
         #logout-btn:hover { background-color: #555; }
         #user-display { margin-right: 10px; font-size: 14px; color: #aaa; }
     </style>
 </head>
 <body>
-    <!-- Top Bar Navigation Panel -->
     <header class="navbar">
         <div class="logo">🎥 MyVideoNet</div>
         <div class="user-controls">
@@ -122,7 +120,6 @@
     </header>
 
     <main class="content-wrapper">
-        <!-- Secure User Auth Block Layout -->
         <section id="auth-section" class="auth-container">
             <div class="card">
                 <h2 id="form-title">Join MyVideoNet</h2>
@@ -136,12 +133,10 @@
             </div>
         </section>
 
-        <!-- Dynamic Embedded YouTube Grid -->
         <section id="video-section" class="video-section hidden">
             <h2 class="section-title">Trending Videos</h2>
             <div class="video-grid">
                 
-                <!-- Video Item 1 -->
                 <div class="video-card">
                     <div class="video-container">
                         <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -152,7 +147,6 @@
                     </div>
                 </div>
 
-                <!-- Video Item 2 -->
                 <div class="video-card">
                     <div class="video-container">
                         <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -163,7 +157,6 @@
                     </div>
                 </div>
 
-                <!-- Video Item 3 -->
                 <div class="video-card">
                     <div class="video-container">
                         <iframe src="https://youtube.com" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -178,71 +171,16 @@
         </section>
     </main>
 
-    <!-- Native Browser Control Elements -->
     <script>
         let isLoginMode = false;
 
-        function toggleMode() {
-            isLoginMode = !isLoginMode;
-            const formTitle = document.getElementById('form-title');
-            const formDesc = document.getElementById('form-desc');
-            const submitBtn = document.getElementById('submit-btn');
-            const toggleText = document.getElementById('toggle-text');
-            
-            if (isLoginMode) {
-                formTitle.innerText = "Log Into MyVideoNet";
-                formDesc.innerText = "Enter your credentials to access your user portal.";
-                submitBtn.innerText = "Log In";
-                toggleText.innerHTML = "Need an account? <span id='toggle-link' onclick='toggleMode()'>Create Account</span>";
-            } else {
-                formTitle.innerText = "Join MyVideoNet";
-                formDesc.innerText = "Create a free account to instantly unlock trending content.";
-                submitBtn.innerText = "Create Account";
-                toggleText.innerHTML = "Already a member? <span id='toggle-link' onclick='toggleMode()'>Log In Here</span>";
-            }
-        }
-
-        function handleAuth(event) {
-            event.preventDefault();
-            const email = document.getElementById('user-email').value;
-            
-            document.getElementById('auth-section').classList.add('hidden');
-            document.getElementById('video-section').classList.remove('hidden');
-            
-            const userDisplay = document.getElementById('user-display');
-            const logoutBtn = document.getElementById('logout-btn');
-            userDisplay.innerText = email;
-            userDisplay.classList.remove('hidden');
-            logoutBtn.classList.remove('hidden');
-        }
-
-        function logoutUser() {
-            document.getElementById('video-section').classList.add('hidden');
-            document.getElementById('auth-section').classList.remove('hidden');
-            document.getElementById('user-display').classList.add('hidden');
-            document.getElementById('logout-btn').classList.add('hidden');
-            document.getElementById('login-form').reset();
-        }
-
-            <!-- Native Browser Control Elements with Infinite Memory -->
-    <script>
-        let isLoginMode = false;
-
-        // Auto-check memory when the page loads
-        window.onload = function() {
+        // Automatically run this check the exact second the page opens
+        window.addEventListener('DOMContentLoaded', () => {
             const savedEmail = localStorage.getItem('myVideoNetUser');
             if (savedEmail) {
-                // If a user is already logged in, skip the form and show the dashboard!
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('video-section').classList.remove('hidden');
-                
-                const userDisplay = document.getElementById('user-display');
-                const logoutBtn = document.getElementById('logout-btn');
-                userDisplay.innerText = savedEmail;
-                userDisplay.classList.remove('hidden');
-                logoutBtn.classList.remove('hidden');
+                showDashboard(savedEmail);
             }
-        }
+        });
 
         function toggleMode() {
             isLoginMode = !isLoginMode;
@@ -268,9 +206,12 @@
             event.preventDefault();
             const email = document.getElementById('user-email').value;
             
-            // SAVE user email to browser memory permanently
+            // Save the email into the browser storage vault
             localStorage.setItem('myVideoNetUser', email);
-            
+            showDashboard(email);
+        }
+
+        function showDashboard(email) {
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('video-section').classList.remove('hidden');
             
@@ -282,7 +223,7 @@
         }
 
         function logoutUser() {
-            // WIPE user email from memory on logout click
+            // Delete the saved session
             localStorage.removeItem('myVideoNetUser');
             
             document.getElementById('video-section').classList.add('hidden');
