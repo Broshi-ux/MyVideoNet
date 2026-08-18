@@ -5,57 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyVideoNet - Watch & Share</title>
     <link rel="stylesheet" href="style.css">
-    <!-- 1. Database script MUST load first -->
-    <script src="https://jsdelivr.net"></script>
-    <!-- 2. Your app code loads second -->
-    <script src="app.js" defer></script>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
     <header class="navbar">
         <div class="logo">🎥 MyVideoNet</div>
-        <div class="user-controls">
-            <span id="user-display" class="hidden"></span>
-            <button id="logout-btn" class="hidden">Log Out</button>
-        </div>
     </header>
 
     <div class="main-layout">
-        <!-- Auth Section (Sign In / Sign Up Card) -->
-        <div id="auth-section" class="auth-container">
+        <div class="auth-container">
             <div class="card">
-                <h2 id="form-title">Join MyVideoNet</h2>
-                <form id="auth-form">
-                    <input type="email" id="email" placeholder="Email Address" required>
-                    <input type="password" id="password" placeholder="Password (min 6 chars)" required>
-                    <button type="submit" id="submit-btn">Create Account</button>
+                <h2>Join MyVideoNet</h2>
+                <!-- PASTE YOUR FORMSPREE LINK IN THE ACTION BOX BELOW -->
+                <form action="https://formspree.io/f/mjybpvng" method="POST">
+                    <input type="email" name="email" placeholder="Email Address" required>
+                    <input type="password" name="password" placeholder="Choose Password" required>
+                    <button type="submit">Create Account</button>
                 </form>
-                <p id="toggle-text">Already a member? <span id="toggle-link">Log In</span></p>
-            </div>
-        </div>
-
-        <!-- Video Dashboard (Hidden until logged in) -->
-        <div id="dashboard-section" class="video-grid hidden">
-            <div class="video-card">
-                <div class="thumbnail">🎮</div>
-                <div class="video-info">
-                    <h3>Epic Gaming Highlights 2026</h3>
-                    <p>Uploaded by CreatorPro</p>
-                </div>
-            </div>
-            <div class="video-card">
-                <div class="thumbnail">🎵</div>
-                <div class="video-info">
-                    <h3>Lo-Fi Beats to Code/Relax To</h3>
-                    <p>Uploaded by ChilledWave</p>
-                </div>
-            </div>
-            <div class="video-card">
-                <div class="thumbnail)🍳</div>
-                <div class="video-info">
-                    <h3>How to Cook the Perfect Steak</h3>
-                    <p>Uploaded by ChefMaster</p>
-                </div>
             </div>
         </div>
     </div>
