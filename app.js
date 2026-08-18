@@ -1,6 +1,7 @@
 const SUPABASE_URL = "https://nnwcwfsgjduipbalwjhi.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_cBk88lLLm_T52T8s6kYFag_Qw-iya5T";
+const SUPABASE_ANON_KEY = "sb_publishable_caK88lLm_TS2T8s6KYFog_Qw_iya5Y";
 
+// Initialize Supabase Client securely
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const authForm = document.getElementById('auth-form');
@@ -17,6 +18,7 @@ const logoutBtn = document.getElementById('logout-btn');
 
 let isLoginMode = false;
 
+// Toggle function for logging in or signing up
 toggleLink.addEventListener('click', () => {
     isLoginMode = !isLoginMode;
     if (isLoginMode) {
@@ -31,25 +33,27 @@ toggleLink.addEventListener('click', () => {
     document.getElementById('toggle-link').addEventListener('click', () => toggleLink.click());
 });
 
+// Handle Account Creation & Logins
 authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // This stops the page from refreshing!
     const email = emailInput.value;
     const password = passwordInput.value;
 
     if (isLoginMode) {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) alert(error.message);
+        if (error) alert("Error logging in: " + error.message);
         else showDashboard(data.user);
     } else {
         const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) alert(error.message);
+        if (error) alert("Error creating account: " + error.message);
         else {
-            alert("Success! Welcome to MyVideoNet.");
+            alert("Success! Account created under your database profile.");
             showDashboard(data.user);
         }
     }
 });
 
+// Sign Out Routine
 logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
     dashboardSection.classList.add('hidden');
