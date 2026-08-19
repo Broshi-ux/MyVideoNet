@@ -385,6 +385,121 @@
             color: #ddd;
         }
 
+
+        /* ======================================================
+           COMMENTS
+           ====================================================== */
+
+        .comments-area {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #333;
+        }
+
+        .comments-heading {
+            margin: 0 0 10px;
+            color: white;
+            font-size: 15px;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .comment-input {
+            flex: 1;
+            min-width: 0;
+            padding: 9px 10px;
+            background: #121212;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .comment-input:focus {
+            border-color: #ff0000;
+        }
+
+        .comment-submit {
+            border: 0;
+            border-radius: 5px;
+            padding: 9px 12px;
+            background: #cc0000;
+            color: white;
+            font-weight: 700;
+        }
+
+        .comment-submit:hover {
+            background: #ff0000;
+        }
+
+        .comment-submit:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .comment-item {
+            padding: 10px;
+            background: #151515;
+            border: 1px solid #292929;
+            border-radius: 6px;
+        }
+
+        .comment-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .comment-author {
+            color: #ddd;
+            font-size: 13px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-time {
+            color: #777;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .comment-body {
+            margin: 0;
+            color: #ddd;
+            font-size: 13px;
+            line-height: 1.45;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-delete {
+            margin-top: 7px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: #ff7777;
+            font-size: 12px;
+            text-decoration: underline;
+        }
+
+        .comment-empty {
+            margin: 0;
+            color: #777;
+            font-size: 13px;
+        }
+
         /* ======================================================
            VIDEO ACTIONS
            ====================================================== */
@@ -1631,13 +1746,12 @@
 
 
         /* ======================================================
-           LOAD VIDEOS + RATINGS
+           LOAD VIDEOS + RATINGS + COMMENTS
            ====================================================== */
 
         async function renderVideos() {
 
             videoGrid.replaceChildren();
-
 
             const loading =
                 document.createElement("div");
@@ -1648,23 +1762,16 @@
             loading.textContent =
                 "Loading videos...";
 
-
             videoGrid.appendChild(
                 loading
             );
 
-
             try {
-
-                /*
-                Download videos and ratings from Supabase.
-                They are no longer loaded from your old
-                MyVideoNet localStorage objects.
-                */
 
                 const [
                     videosResult,
-                    ratingsResult
+                    ratingsResult,
+                    commentsResult
                 ] =
                     await Promise.all([
 
@@ -1684,19 +1791,32 @@
                             .from("ratings")
                             .select(
                                 "id, video_id, voter_id, rating"
+                            ),
+
+                        supabaseClient
+                            .from("comments")
+                            .select(
+                                "id, video_id, user_id, author, body, created_at"
+                            )
+                            .order(
+                                "created_at",
+                                {
+                                    ascending: true
+                                }
                             )
                     ]);
-
 
                 if (videosResult.error) {
                     throw videosResult.error;
                 }
 
-
                 if (ratingsResult.error) {
                     throw ratingsResult.error;
                 }
 
+                if (commentsResult.error) {
+                    throw commentsResult.error;
+                }
 
                 const videos =
                     videosResult.data || [];
@@ -1704,9 +1824,10 @@
                 const ratings =
                     ratingsResult.data || [];
 
+                const comments =
+                    commentsResult.data || [];
 
                 videoGrid.replaceChildren();
-
 
                 if (videos.length === 0) {
 
@@ -1719,14 +1840,12 @@
                     empty.textContent =
                         "No videos have been posted yet. Publish the first video using Creator Studio above.";
 
-
                     videoGrid.appendChild(
                         empty
                     );
 
                     return;
                 }
-
 
                 for (const video of videos) {
 
@@ -1745,19 +1864,32 @@
                             }
                         );
 
+                    const videoComments =
+                        comments.filter(
+                            function (comment) {
+
+                                return (
+                                    Number(
+                                        comment.video_id
+                                    ) ===
+                                    Number(
+                                        video.id
+                                    )
+                                );
+                            }
+                        );
 
                     const card =
                         createVideoCard(
                             video,
-                            videoRatings
+                            videoRatings,
+                            videoComments
                         );
-
 
                     videoGrid.appendChild(
                         card
                     );
                 }
-
 
             } catch (error) {
 
@@ -1766,9 +1898,7 @@
                     error
                 );
 
-
                 videoGrid.replaceChildren();
-
 
                 const failed =
                     document.createElement("div");
@@ -1783,7 +1913,6 @@
                         "Please try refreshing the page."
                     );
 
-
                 videoGrid.appendChild(
                     failed
                 );
@@ -1797,7 +1926,8 @@
 
         function createVideoCard(
             video,
-            videoRatings
+            videoRatings,
+            videoComments
         ) {
 
             const card =
@@ -1926,6 +2056,18 @@
 
             info.appendChild(
                 ratingArea
+            );
+
+
+            const commentsArea =
+                createCommentsArea(
+                    video,
+                    videoComments
+                );
+
+
+            info.appendChild(
+                commentsArea
             );
 
 
@@ -2302,6 +2444,476 @@
                     )
                 );
             }
+        }
+
+
+
+        /* ======================================================
+           COMMENTS
+           ====================================================== */
+
+        function createCommentsArea(
+            video,
+            videoComments
+        ) {
+
+            const area =
+                document.createElement(
+                    "section"
+                );
+
+            area.className =
+                "comments-area";
+
+
+            const heading =
+                document.createElement(
+                    "h4"
+                );
+
+            heading.className =
+                "comments-heading";
+
+            heading.textContent =
+                "Comments (" +
+                videoComments.length +
+                ")";
+
+
+            area.appendChild(
+                heading
+            );
+
+
+            if (currentUser) {
+
+                const form =
+                    document.createElement(
+                        "form"
+                    );
+
+                form.className =
+                    "comment-form";
+
+
+                const input =
+                    document.createElement(
+                        "input"
+                    );
+
+                input.type =
+                    "text";
+
+                input.className =
+                    "comment-input";
+
+                input.maxLength =
+                    1000;
+
+                input.placeholder =
+                    "Write a comment...";
+
+                input.required =
+                    true;
+
+
+                const submit =
+                    document.createElement(
+                        "button"
+                    );
+
+                submit.type =
+                    "submit";
+
+                submit.className =
+                    "comment-submit";
+
+                submit.textContent =
+                    "Post";
+
+
+                form.addEventListener(
+                    "submit",
+                    async function (event) {
+
+                        event.preventDefault();
+
+                        const body =
+                            input.value.trim();
+
+                        if (!body) {
+                            return;
+                        }
+
+                        submit.disabled =
+                            true;
+
+                        submit.textContent =
+                            "Posting...";
+
+                        await postComment(
+                            video.id,
+                            body
+                        );
+
+                        submit.disabled =
+                            false;
+
+                        submit.textContent =
+                            "Post";
+                    }
+                );
+
+
+                form.appendChild(
+                    input
+                );
+
+                form.appendChild(
+                    submit
+                );
+
+                area.appendChild(
+                    form
+                );
+            }
+
+
+            const list =
+                document.createElement(
+                    "div"
+                );
+
+            list.className =
+                "comment-list";
+
+
+            if (videoComments.length === 0) {
+
+                const empty =
+                    document.createElement(
+                        "p"
+                    );
+
+                empty.className =
+                    "comment-empty";
+
+                empty.textContent =
+                    "No comments yet. Be the first to comment.";
+
+
+                list.appendChild(
+                    empty
+                );
+
+            } else {
+
+                for (const comment of videoComments) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "comment-item";
+
+
+                    const meta =
+                        document.createElement(
+                            "div"
+                        );
+
+                    meta.className =
+                        "comment-meta";
+
+
+                    const author =
+                        document.createElement(
+                            "span"
+                        );
+
+                    author.className =
+                        "comment-author";
+
+                    author.textContent =
+                        comment.author ||
+                        "MyVideoNet User";
+
+
+                    const time =
+                        document.createElement(
+                            "span"
+                        );
+
+                    time.className =
+                        "comment-time";
+
+                    time.textContent =
+                        formatCommentTime(
+                            comment.created_at
+                        );
+
+
+                    meta.appendChild(
+                        author
+                    );
+
+                    meta.appendChild(
+                        time
+                    );
+
+
+                    const body =
+                        document.createElement(
+                            "p"
+                        );
+
+                    body.className =
+                        "comment-body";
+
+                    body.textContent =
+                        comment.body;
+
+
+                    item.appendChild(
+                        meta
+                    );
+
+                    item.appendChild(
+                        body
+                    );
+
+
+                    if (
+                        currentUser &&
+                        comment.user_id === currentUser.id
+                    ) {
+
+                        const deleteBtn =
+                            document.createElement(
+                                "button"
+                            );
+
+                        deleteBtn.type =
+                            "button";
+
+                        deleteBtn.className =
+                            "comment-delete";
+
+                        deleteBtn.textContent =
+                            "Delete";
+
+
+                        deleteBtn.addEventListener(
+                            "click",
+                            async function () {
+
+                                await deleteComment(
+                                    comment.id
+                                );
+                            }
+                        );
+
+
+                        item.appendChild(
+                            deleteBtn
+                        );
+                    }
+
+
+                    list.appendChild(
+                        item
+                    );
+                }
+            }
+
+
+            area.appendChild(
+                list
+            );
+
+
+            return area;
+        }
+
+
+        async function postComment(
+            videoId,
+            body
+        ) {
+
+            if (!currentUser) {
+
+                alert(
+                    "Please log in before commenting."
+                );
+
+                return;
+            }
+
+
+            const cleanBody =
+                body.trim();
+
+
+            if (
+                !cleanBody ||
+                cleanBody.length > 1000
+            ) {
+
+                alert(
+                    "Comments must contain between 1 and 1000 characters."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from("comments")
+                        .insert({
+                            video_id:
+                                videoId,
+
+                            user_id:
+                                currentUser.id,
+
+                            author:
+                                createDisplayName(
+                                    currentUser.email
+                                ),
+
+                            body:
+                                cleanBody
+                        });
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                await renderVideos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Comment posting error:",
+                    error
+                );
+
+
+                alert(
+                    "Your comment could not be posted. " +
+                    (
+                        error.message ||
+                        ""
+                    )
+                );
+            }
+        }
+
+
+        async function deleteComment(
+            commentId
+        ) {
+
+            if (!currentUser) {
+                return;
+            }
+
+
+            const confirmed =
+                window.confirm(
+                    "Delete this comment?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from("comments")
+                        .delete()
+                        .eq(
+                            "id",
+                            commentId
+                        );
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                await renderVideos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Comment deletion error:",
+                    error
+                );
+
+
+                alert(
+                    "The comment could not be deleted. " +
+                    (
+                        error.message ||
+                        ""
+                    )
+                );
+            }
+        }
+
+
+        function formatCommentTime(
+            timestamp
+        ) {
+
+            if (!timestamp) {
+                return "";
+            }
+
+
+            const date =
+                new Date(timestamp);
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+                return "";
+            }
+
+
+            return date.toLocaleString(
+                undefined,
+                {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit"
+                }
+            );
         }
 
 
