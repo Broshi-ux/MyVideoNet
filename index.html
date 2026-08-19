@@ -500,7 +500,64 @@
             font-size: 13px;
         }
 
-        /* ======================================================\n           YOUTUBE-STYLE HOME + WATCH VIEW\n           ====================================================== */\n\n        .home-video-card {\n            overflow: hidden;\n            background: transparent;\n            border: 0;\n            border-radius: 0;\n            box-shadow: none;\n            cursor: pointer;\n        }\n\n        .home-thumbnail {\n            position: relative;\n            width: 100%;\n            aspect-ratio: 16 / 9;\n            overflow: hidden;\n            border-radius: 10px;\n            background: #000;\n        }\n\n        .home-thumbnail img {\n            width: 100%;\n            height: 100%;\n            display: block;\n            object-fit: cover;\n        }\n\n        .home-video-card:hover .home-thumbnail img {\n            transform: scale(1.015);\n        }\n\n        .home-thumbnail img { transition: transform 0.15s ease; }\n\n        .home-card-info { padding: 11px 2px 0; }\n        .home-card-title { margin: 0 0 6px; color: #f1f1f1; font-size: 16px; line-height: 1.35; }\n        .home-card-uploader, .home-card-stats { margin: 0 0 4px; color: #aaa; font-size: 13px; }\n\n        .watch-view { width: 100%; }\n        .watch-back {\n            margin: 0 0 16px; padding: 9px 13px; border: 0; border-radius: 6px;\n            background: #272727; color: white; font-weight: 700;\n        }\n        .watch-back:hover { background: #3f3f3f; }\n        .watch-player {\n            position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000;\n            overflow: hidden; border-radius: 10px;\n        }\n        .watch-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n        .watch-title { margin: 16px 0 7px; color: white; font-size: 24px; line-height: 1.3; overflow-wrap: anywhere; }\n        .watch-uploader { margin: 0 0 14px; color: #aaa; font-size: 14px; }\n        .watch-panel { max-width: 900px; }\n        .watch-panel .rating-area { margin-top: 12px; }\n        .watch-panel .comments-area { margin-top: 18px; }\n        .watch-panel .comment-item { padding: 12px; }\n\n        /* ======================================================
+        /* ======================================================
+           YOUTUBE-STYLE HOME + WATCH VIEW
+           ====================================================== */
+
+        .home-video-card {
+            overflow: hidden;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            cursor: pointer;
+        }
+
+        .home-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        .home-thumbnail img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .home-video-card:hover .home-thumbnail img {
+            transform: scale(1.015);
+        }
+
+        .home-thumbnail img { transition: transform 0.15s ease; }
+
+        .home-card-info { padding: 11px 2px 0; }
+        .home-card-title { margin: 0 0 6px; color: #f1f1f1; font-size: 16px; line-height: 1.35; }
+        .home-card-uploader, .home-card-stats { margin: 0 0 4px; color: #aaa; font-size: 13px; }
+
+        .watch-view { width: 100%; }
+        .watch-back {
+            margin: 0 0 16px; padding: 9px 13px; border: 0; border-radius: 6px;
+            background: #272727; color: white; font-weight: 700;
+        }
+        .watch-back:hover { background: #3f3f3f; }
+        .watch-player {
+            position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000;
+            overflow: hidden; border-radius: 10px;
+        }
+        .watch-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .watch-title { margin: 16px 0 7px; color: white; font-size: 24px; line-height: 1.3; overflow-wrap: anywhere; }
+        .watch-uploader { margin: 0 0 14px; color: #aaa; font-size: 14px; }
+        .watch-panel { max-width: 900px; }
+        .watch-panel .rating-area { margin-top: 12px; }
+        .watch-panel .comments-area { margin-top: 18px; }
+        .watch-panel .comment-item { padding: 12px; }
+
+        /* ======================================================
            VIDEO ACTIONS
            ====================================================== */
 
@@ -1746,7 +1803,264 @@
            LOAD VIDEOS + RATINGS + COMMENTS
            ====================================================== */
 
-        async function renderVideos() {\n\n            const requestedVideoId =\n                new URLSearchParams(window.location.search).get("video");\n\n            if (requestedVideoId) {\n                await renderWatchPage(requestedVideoId);\n                return;\n            }\n\n            await renderHomePage();\n        }\n\n\n        async function loadVideoDatabase() {\n\n            const [videosResult, ratingsResult, commentsResult] =\n                await Promise.all([\n                    supabaseClient\n                        .from("videos")\n                        .select("id, youtube_id, title, uploader, user_id, created_at")\n                        .order("created_at", { ascending: false }),\n\n                    supabaseClient\n                        .from("ratings")\n                        .select("id, video_id, voter_id, rating"),\n\n                    supabaseClient\n                        .from("comments")\n                        .select("id, video_id, user_id, author, body, created_at")\n                        .order("created_at", { ascending: true })\n                ]);\n\n            if (videosResult.error) throw videosResult.error;\n            if (ratingsResult.error) throw ratingsResult.error;\n            if (commentsResult.error) throw commentsResult.error;\n\n            return {\n                videos: videosResult.data || [],\n                ratings: ratingsResult.data || [],\n                comments: commentsResult.data || []\n            };\n        }\n\n\n        async function renderHomePage() {\n\n            videoGrid.replaceChildren();\n            videoGrid.className = "video-grid";\n\n            const loading = document.createElement("div");\n            loading.className = "loading-message";\n            loading.textContent = "Loading videos...";\n            videoGrid.appendChild(loading);\n\n            try {\n                const database = await loadVideoDatabase();\n                videoGrid.replaceChildren();\n\n                if (database.videos.length === 0) {\n                    const empty = document.createElement("div");\n                    empty.className = "empty-message";\n                    empty.textContent = "No videos have been posted yet. Publish the first video using Creator Studio above.";\n                    videoGrid.appendChild(empty);\n                    return;\n                }\n\n                for (const video of database.videos) {\n                    const videoRatings = database.ratings.filter(\n                        rating => Number(rating.video_id) === Number(video.id)\n                    );\n                    const videoComments = database.comments.filter(\n                        comment => Number(comment.video_id) === Number(video.id)\n                    );\n                    videoGrid.appendChild(\n                        createHomeVideoCard(video, videoRatings, videoComments)\n                    );\n                }\n            } catch (error) {\n                console.error("Video loading error:", error);\n                videoGrid.replaceChildren();\n                const failed = document.createElement("div");\n                failed.className = "empty-message";\n                failed.textContent = "MyVideoNet could not load the online video database. " +\n                    (error.message || "Please try refreshing the page.");\n                videoGrid.appendChild(failed);\n            }\n        }\n\n\n        function createHomeVideoCard(video, videoRatings, videoComments) {\n\n            const card = document.createElement("article");\n            card.className = "home-video-card";\n            card.tabIndex = 0;\n            card.setAttribute("role", "link");\n\n            const openVideo = function () {\n                const url = new URL(window.location.href);\n                url.searchParams.set("video", video.id);\n                window.location.href = url.toString();\n            };\n\n            card.addEventListener("click", openVideo);\n            card.addEventListener("keydown", function (event) {\n                if (event.key === "Enter" || event.key === " ") {\n                    event.preventDefault();\n                    openVideo();\n                }\n            });\n\n            const thumbnail = document.createElement("div");\n            thumbnail.className = "home-thumbnail";\n\n            const image = document.createElement("img");\n            image.src = "https://i.ytimg.com/vi/" +\n                encodeURIComponent(video.youtube_id) + "/hqdefault.jpg";\n            image.alt = video.title;\n            image.loading = "lazy";\n            thumbnail.appendChild(image);\n\n            const info = document.createElement("div");\n            info.className = "home-card-info";\n\n            const title = document.createElement("h3");\n            title.className = "home-card-title";\n            title.textContent = video.title;\n\n            const uploader = document.createElement("p");\n            uploader.className = "home-card-uploader";\n            uploader.textContent = video.uploader || "MyVideoNet User";\n\n            const stats = document.createElement("p");\n            stats.className = "home-card-stats";\n\n            let average = 0;\n            if (videoRatings.length > 0) {\n                average = videoRatings.reduce(\n                    (total, item) => total + Number(item.rating), 0\n                ) / videoRatings.length;\n            }\n\n            stats.textContent =\n                (videoRatings.length ? average.toFixed(1) + " / 5" : "No ratings") +\n                " • " + videoComments.length +\n                (videoComments.length === 1 ? " comment" : " comments");\n\n            info.appendChild(title);\n            info.appendChild(uploader);\n            info.appendChild(stats);\n            card.appendChild(thumbnail);\n            card.appendChild(info);\n            return card;\n        }\n\n\n        async function renderWatchPage(requestedVideoId) {\n\n            videoGrid.replaceChildren();\n            videoGrid.className = "watch-view";\n\n            const loading = document.createElement("div");\n            loading.className = "loading-message";\n            loading.textContent = "Loading video...";\n            videoGrid.appendChild(loading);\n\n            try {\n                const database = await loadVideoDatabase();\n                const video = database.videos.find(\n                    item => String(item.id) === String(requestedVideoId)\n                );\n\n                videoGrid.replaceChildren();\n\n                if (!video) {\n                    const missing = document.createElement("div");\n                    missing.className = "empty-message";\n                    missing.textContent = "This video could not be found.";\n                    videoGrid.appendChild(missing);\n                    return;\n                }\n\n                const videoRatings = database.ratings.filter(\n                    rating => Number(rating.video_id) === Number(video.id)\n                );\n                const videoComments = database.comments.filter(\n                    comment => Number(comment.video_id) === Number(video.id)\n                );\n\n                const back = document.createElement("button");\n                back.type = "button";\n                back.className = "watch-back";\n                back.textContent = "← Back to videos";\n                back.addEventListener("click", function () {\n                    const url = new URL(window.location.href);\n                    url.searchParams.delete("video");\n                    window.location.href = url.toString();\n                });\n\n                const panel = document.createElement("article");\n                panel.className = "watch-panel";\n\n                const player = document.createElement("div");\n                player.className = "watch-player";\n\n                const iframe = document.createElement("iframe");\n                iframe.src = "https://www.youtube-nocookie.com/embed/" +\n                    encodeURIComponent(video.youtube_id);\n                iframe.title = video.title + " - YouTube video player";\n                iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");\n                iframe.setAttribute("allowfullscreen", "");\n                iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");\n                player.appendChild(iframe);\n\n                const title = document.createElement("h1");\n                title.className = "watch-title";\n                title.textContent = video.title;\n\n                const uploader = document.createElement("p");\n                uploader.className = "watch-uploader";\n                uploader.textContent = "Uploaded by " +\n                    (video.uploader || "MyVideoNet User");\n\n                panel.appendChild(player);\n                panel.appendChild(title);\n                panel.appendChild(uploader);\n                panel.appendChild(createRatingArea(video, videoRatings));\n                panel.appendChild(createCommentsArea(video, videoComments));\n\n                if (currentUser && video.user_id === currentUser.id) {\n                    const actions = document.createElement("div");\n                    actions.className = "video-actions";\n                    const removeBtn = document.createElement("button");\n                    removeBtn.type = "button";\n                    removeBtn.className = "remove-btn";\n                    removeBtn.textContent = "Remove Video";\n                    removeBtn.addEventListener("click", function () {\n                        deleteVideo(video.id, video.title);\n                    });\n                    actions.appendChild(removeBtn);\n                    panel.appendChild(actions);\n                }\n\n                videoGrid.appendChild(back);\n                videoGrid.appendChild(panel);\n            } catch (error) {\n                console.error("Watch page error:", error);\n                videoGrid.replaceChildren();\n                const failed = document.createElement("div");\n                failed.className = "empty-message";\n                failed.textContent = "MyVideoNet could not load this video. " +\n                    (error.message || "Please try refreshing the page.");\n                videoGrid.appendChild(failed);\n            }\n        }\n\n\n        /* ======================================================
+        async function renderVideos() {
+
+            const requestedVideoId =
+                new URLSearchParams(window.location.search).get("video");
+
+            if (requestedVideoId) {
+                await renderWatchPage(requestedVideoId);
+                return;
+            }
+
+            await renderHomePage();
+        }
+
+
+        async function loadVideoDatabase() {
+
+            const [videosResult, ratingsResult, commentsResult] =
+                await Promise.all([
+                    supabaseClient
+                        .from("videos")
+                        .select("id, youtube_id, title, uploader, user_id, created_at")
+                        .order("created_at", { ascending: false }),
+
+                    supabaseClient
+                        .from("ratings")
+                        .select("id, video_id, voter_id, rating"),
+
+                    supabaseClient
+                        .from("comments")
+                        .select("id, video_id, user_id, author, body, created_at")
+                        .order("created_at", { ascending: true })
+                ]);
+
+            if (videosResult.error) throw videosResult.error;
+            if (ratingsResult.error) throw ratingsResult.error;
+            if (commentsResult.error) throw commentsResult.error;
+
+            return {
+                videos: videosResult.data || [],
+                ratings: ratingsResult.data || [],
+                comments: commentsResult.data || []
+            };
+        }
+
+
+        async function renderHomePage() {
+
+            videoGrid.replaceChildren();
+            videoGrid.className = "video-grid";
+
+            const loading = document.createElement("div");
+            loading.className = "loading-message";
+            loading.textContent = "Loading videos...";
+            videoGrid.appendChild(loading);
+
+            try {
+                const database = await loadVideoDatabase();
+                videoGrid.replaceChildren();
+
+                if (database.videos.length === 0) {
+                    const empty = document.createElement("div");
+                    empty.className = "empty-message";
+                    empty.textContent = "No videos have been posted yet. Publish the first video using Creator Studio above.";
+                    videoGrid.appendChild(empty);
+                    return;
+                }
+
+                for (const video of database.videos) {
+                    const videoRatings = database.ratings.filter(
+                        rating => Number(rating.video_id) === Number(video.id)
+                    );
+                    const videoComments = database.comments.filter(
+                        comment => Number(comment.video_id) === Number(video.id)
+                    );
+                    videoGrid.appendChild(
+                        createHomeVideoCard(video, videoRatings, videoComments)
+                    );
+                }
+            } catch (error) {
+                console.error("Video loading error:", error);
+                videoGrid.replaceChildren();
+                const failed = document.createElement("div");
+                failed.className = "empty-message";
+                failed.textContent = "MyVideoNet could not load the online video database. " +
+                    (error.message || "Please try refreshing the page.");
+                videoGrid.appendChild(failed);
+            }
+        }
+
+
+        function createHomeVideoCard(video, videoRatings, videoComments) {
+
+            const card = document.createElement("article");
+            card.className = "home-video-card";
+            card.tabIndex = 0;
+            card.setAttribute("role", "link");
+
+            const openVideo = function () {
+                const url = new URL(window.location.href);
+                url.searchParams.set("video", video.id);
+                window.location.href = url.toString();
+            };
+
+            card.addEventListener("click", openVideo);
+            card.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openVideo();
+                }
+            });
+
+            const thumbnail = document.createElement("div");
+            thumbnail.className = "home-thumbnail";
+
+            const image = document.createElement("img");
+            image.src = "https://i.ytimg.com/vi/" +
+                encodeURIComponent(video.youtube_id) + "/hqdefault.jpg";
+            image.alt = video.title;
+            image.loading = "lazy";
+            thumbnail.appendChild(image);
+
+            const info = document.createElement("div");
+            info.className = "home-card-info";
+
+            const title = document.createElement("h3");
+            title.className = "home-card-title";
+            title.textContent = video.title;
+
+            const uploader = document.createElement("p");
+            uploader.className = "home-card-uploader";
+            uploader.textContent = video.uploader || "MyVideoNet User";
+
+            const stats = document.createElement("p");
+            stats.className = "home-card-stats";
+
+            let average = 0;
+            if (videoRatings.length > 0) {
+                average = videoRatings.reduce(
+                    (total, item) => total + Number(item.rating), 0
+                ) / videoRatings.length;
+            }
+
+            stats.textContent =
+                (videoRatings.length ? average.toFixed(1) + " / 5" : "No ratings") +
+                " • " + videoComments.length +
+                (videoComments.length === 1 ? " comment" : " comments");
+
+            info.appendChild(title);
+            info.appendChild(uploader);
+            info.appendChild(stats);
+            card.appendChild(thumbnail);
+            card.appendChild(info);
+            return card;
+        }
+
+
+        async function renderWatchPage(requestedVideoId) {
+
+            videoGrid.replaceChildren();
+            videoGrid.className = "watch-view";
+
+            const loading = document.createElement("div");
+            loading.className = "loading-message";
+            loading.textContent = "Loading video...";
+            videoGrid.appendChild(loading);
+
+            try {
+                const database = await loadVideoDatabase();
+                const video = database.videos.find(
+                    item => String(item.id) === String(requestedVideoId)
+                );
+
+                videoGrid.replaceChildren();
+
+                if (!video) {
+                    const missing = document.createElement("div");
+                    missing.className = "empty-message";
+                    missing.textContent = "This video could not be found.";
+                    videoGrid.appendChild(missing);
+                    return;
+                }
+
+                const videoRatings = database.ratings.filter(
+                    rating => Number(rating.video_id) === Number(video.id)
+                );
+                const videoComments = database.comments.filter(
+                    comment => Number(comment.video_id) === Number(video.id)
+                );
+
+                const back = document.createElement("button");
+                back.type = "button";
+                back.className = "watch-back";
+                back.textContent = "← Back to videos";
+                back.addEventListener("click", function () {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete("video");
+                    window.location.href = url.toString();
+                });
+
+                const panel = document.createElement("article");
+                panel.className = "watch-panel";
+
+                const player = document.createElement("div");
+                player.className = "watch-player";
+
+                const iframe = document.createElement("iframe");
+                iframe.src = "https://www.youtube-nocookie.com/embed/" +
+                    encodeURIComponent(video.youtube_id);
+                iframe.title = video.title + " - YouTube video player";
+                iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+                iframe.setAttribute("allowfullscreen", "");
+                iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+                player.appendChild(iframe);
+
+                const title = document.createElement("h1");
+                title.className = "watch-title";
+                title.textContent = video.title;
+
+                const uploader = document.createElement("p");
+                uploader.className = "watch-uploader";
+                uploader.textContent = "Uploaded by " +
+                    (video.uploader || "MyVideoNet User");
+
+                panel.appendChild(player);
+                panel.appendChild(title);
+                panel.appendChild(uploader);
+                panel.appendChild(createRatingArea(video, videoRatings));
+                panel.appendChild(createCommentsArea(video, videoComments));
+
+                if (currentUser && video.user_id === currentUser.id) {
+                    const actions = document.createElement("div");
+                    actions.className = "video-actions";
+                    const removeBtn = document.createElement("button");
+                    removeBtn.type = "button";
+                    removeBtn.className = "remove-btn";
+                    removeBtn.textContent = "Remove Video";
+                    removeBtn.addEventListener("click", function () {
+                        deleteVideo(video.id, video.title);
+                    });
+                    actions.appendChild(removeBtn);
+                    panel.appendChild(actions);
+                }
+
+                videoGrid.appendChild(back);
+                videoGrid.appendChild(panel);
+            } catch (error) {
+                console.error("Watch page error:", error);
+                videoGrid.replaceChildren();
+                const failed = document.createElement("div");
+                failed.className = "empty-message";
+                failed.textContent = "MyVideoNet could not load this video. " +
+                    (error.message || "Please try refreshing the page.");
+                videoGrid.appendChild(failed);
+            }
+        }
+
+
+        /* ======================================================
            CREATE VIDEO CARD
            ====================================================== */
 
