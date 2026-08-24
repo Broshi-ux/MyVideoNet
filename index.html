@@ -771,6 +771,26 @@
         }
 
         /* ======================================================
+           PROFILE + RULES + MODERATION
+           ====================================================== */
+        .dashboard-layout { grid-template-columns: 260px minmax(0, 1fr) 280px; }
+        .left-sidebar { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 18px; }
+        .brand-image { width: 100%; max-height: 180px; object-fit: contain; background: #fff; border-radius: 10px; margin-bottom: 12px; }
+        .profile-form { display: flex; flex-direction: column; gap: 9px; }
+        .profile-label { color: #aaa; font-size: 12px; font-weight: 700; }
+        .profile-textarea { resize: vertical; min-height: 74px; }
+        .profile-status { min-height: 48px; }
+        .profile-counter { margin: -4px 0 2px; text-align: right; color: #777; font-size: 11px; }
+        .subscriber-count { margin: 0 0 12px; color: #3ea6ff; font-weight: 700; font-size: 14px; }
+        .rules-list { margin: 0; padding-left: 20px; color: #ccc; font-size: 13px; line-height: 1.65; }
+        .staff-badge { display: inline-block; margin-left: 7px; padding: 2px 7px; border-radius: 999px; background: #14324a; color: #69b9ff; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .moderation-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #333; }
+        .moderation-btn { border: 0; border-radius: 5px; padding: 8px 11px; background: #353535; color: #eee; font-weight: 700; font-size: 12px; }
+        .moderation-btn.danger { background: #8f1d1d; }
+        .pinned-badge { position: absolute; top: 9px; left: 9px; z-index: 2; padding: 5px 8px; border-radius: 5px; background: rgba(0,0,0,.82); color: #f5c518; font-size: 11px; font-weight: 800; }
+        @media (max-width: 1100px) { .dashboard-layout { grid-template-columns: 220px minmax(0,1fr); } .right-sidebar { position: static; grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); } }
+
+        /* ======================================================
            RESPONSIVE
            ====================================================== */
 
@@ -953,6 +973,34 @@
 
             <div class="dashboard-layout">
 
+                <aside class="left-sidebar">
+                    <section class="sidebar-panel">
+                        <img class="brand-image" src="mvn-logo.png" alt="MyVideoNet logo">
+                        <h3>My Profile</h3>
+                        <p id="profile-subscriber-count" class="subscriber-count">0 subscribers</p>
+                        <form id="profile-form" class="profile-form">
+                            <label class="profile-label" for="profile-display-name">Display name</label>
+                            <input id="profile-display-name" class="text-input" type="text" maxlength="50" required>
+                            <label class="profile-label" for="profile-religion">Religion (optional)</label>
+                            <select id="profile-religion" class="text-input">
+                                <option value="">Prefer not to say</option><option>Catholic</option><option>LDS</option><option>Muslim</option><option>Pagan</option><option>Hindu</option><option>Atheist</option><option>Agnostic</option><option>Others</option>
+                            </select>
+                            <label class="profile-label" for="profile-status">Status</label>
+                            <textarea id="profile-status" class="text-input profile-textarea profile-status" maxlength="75" placeholder="What are you up to?"></textarea>
+                            <div id="status-counter" class="profile-counter">0 / 75</div>
+                            <label class="profile-label" for="profile-bio">Bio</label>
+                            <textarea id="profile-bio" class="text-input profile-textarea" maxlength="250" placeholder="Tell MyVideoNet about yourself."></textarea>
+                            <div id="bio-counter" class="profile-counter">0 / 250</div>
+                            <button id="save-profile-btn" class="primary-btn" type="submit">Save Profile</button>
+                        </form>
+                        <div id="profile-message" class="message" aria-live="polite"></div>
+                    </section>
+                    <section class="sidebar-panel">
+                        <h3>MyVideoNet Rules</h3>
+                        <ul class="rules-list"><li>No NSFW content.</li><li>No “888” propaganda.</li><li>No gore.</li><li>No illegal content.</li></ul>
+                    </section>
+                </aside>
+
                 <div class="dashboard-main">
 
                     <section
@@ -1098,6 +1146,8 @@
         let loginMode = false;
 
         let currentUser = null;
+        let currentProfile = null;
+        let currentStaffRole = null;
 
 
         /* ======================================================
@@ -1173,6 +1223,17 @@
         const leaderboardList =
             document.getElementById("leaderboard-list");
 
+        const profileForm = document.getElementById("profile-form");
+        const profileDisplayName = document.getElementById("profile-display-name");
+        const profileReligion = document.getElementById("profile-religion");
+        const profileStatus = document.getElementById("profile-status");
+        const profileBio = document.getElementById("profile-bio");
+        const profileSubscriberCount = document.getElementById("profile-subscriber-count");
+        const profileMessage = document.getElementById("profile-message");
+        const saveProfileBtn = document.getElementById("save-profile-btn");
+        const statusCounter = document.getElementById("status-counter");
+        const bioCounter = document.getElementById("bio-counter");
+
 
         /* ======================================================
            START APPLICATION
@@ -1247,9 +1308,11 @@
            SHOW CORRECT SCREEN
            ====================================================== */
 
-        function updateScreen() {
+        async function updateScreen() {
 
             if (currentUser) {
+                const allowed = await loadCurrentAccountState();
+                if (!allowed) return;
 
                 authSection.classList.add("hidden");
 
@@ -1264,8 +1327,7 @@
                     currentUser.email || "MyVideoNet User";
 
 
-                renderSidebar();
-                renderVideos();
+                await Promise.all([renderSidebar(), renderVideos()]);
 
             } else {
 
@@ -1610,6 +1672,8 @@
 
                     currentUser =
                         null;
+                    currentProfile = null;
+                    currentStaffRole = null;
 
 
                     updateScreen();
@@ -2136,7 +2200,7 @@
 
                 supabaseClient
                     .from("videos")
-                    .select("id, youtube_id, title, uploader, user_id, created_at, storage_path, original_filename, mime_type, file_size")
+                    .select("id, youtube_id, title, uploader, user_id, created_at, storage_path, original_filename, mime_type, file_size, is_pinned, pinned_at, pinned_by")
                     .order("created_at", { ascending: false }),
 
                 supabaseClient
@@ -2150,7 +2214,7 @@
 
                 supabaseClient
                     .from("profiles")
-                    .select("user_id, display_name, mvn_points, comment_points, bonus_points, created_at")
+                    .select("user_id, display_name, mvn_points, comment_points, bonus_points, created_at, religion, bio, status, is_banned")
                     .order("mvn_points", { ascending: false }),
 
                 supabaseClient
@@ -2219,7 +2283,12 @@
                     return;
                 }
 
-                for (const video of database.videos) {
+                const orderedVideos = database.videos.slice().sort((a, b) => {
+                    if (Boolean(a.is_pinned) !== Boolean(b.is_pinned)) return a.is_pinned ? -1 : 1;
+                    return new Date(b.created_at) - new Date(a.created_at);
+                });
+
+                for (const video of orderedVideos) {
                     const videoRatings = database.ratings.filter(
                         rating => Number(rating.video_id) === Number(video.id)
                     );
@@ -2265,6 +2334,12 @@
 
             const thumbnail = document.createElement("div");
             thumbnail.className = "home-thumbnail";
+            if (video.is_pinned) {
+                const pinBadge = document.createElement("span");
+                pinBadge.className = "pinned-badge";
+                pinBadge.textContent = "📌 PINNED";
+                thumbnail.appendChild(pinBadge);
+            }
 
             if (video.storage_path) {
                 const nativeThumb = document.createElement("div");
@@ -2401,8 +2476,10 @@
 
                 const uploader = document.createElement("p");
                 uploader.className = "watch-uploader";
+                const channelSubscribers = database.subscriptions.filter(item => item.channel_id === video.user_id).length;
                 uploader.textContent = "Uploaded by " +
-                    (video.uploader || "MyVideoNet User");
+                    (video.uploader || "MyVideoNet User") + " • " + channelSubscribers +
+                    (channelSubscribers === 1 ? " subscriber" : " subscribers");
 
                 channelRow.appendChild(uploader);
 
@@ -2425,17 +2502,28 @@
                 panel.appendChild(createRatingArea(video, videoRatings));
                 panel.appendChild(createCommentsArea(video, videoComments));
 
-                if (currentUser && video.user_id === currentUser.id) {
+                if (currentUser && (video.user_id === currentUser.id || currentStaffRole)) {
                     const actions = document.createElement("div");
-                    actions.className = "video-actions";
+                    actions.className = currentStaffRole ? "moderation-actions" : "video-actions";
                     const removeBtn = document.createElement("button");
                     removeBtn.type = "button";
-                    removeBtn.className = "remove-btn";
-                    removeBtn.textContent = "Remove Video";
-                    removeBtn.addEventListener("click", function () {
-                        deleteVideo(video.id, video.title);
-                    });
+                    removeBtn.className = currentStaffRole ? "moderation-btn danger" : "remove-btn";
+                    removeBtn.textContent = video.user_id === currentUser.id ? "Remove Video" : "Delete Video";
+                    removeBtn.addEventListener("click", function () { deleteVideo(video.id, video.title); });
                     actions.appendChild(removeBtn);
+                    if (currentStaffRole) {
+                        const pinBtn = document.createElement("button");
+                        pinBtn.type = "button"; pinBtn.className = "moderation-btn";
+                        pinBtn.textContent = video.is_pinned ? "Unpin Video" : "Pin Video";
+                        pinBtn.addEventListener("click", function () { setVideoPin(video.id, !video.is_pinned); });
+                        actions.appendChild(pinBtn);
+                        if (video.user_id && video.user_id !== currentUser.id) {
+                            const banBtn = document.createElement("button");
+                            banBtn.type = "button"; banBtn.className = "moderation-btn danger"; banBtn.textContent = "Ban User";
+                            banBtn.addEventListener("click", function () { banUser(video.user_id, video.uploader || "this user"); });
+                            actions.appendChild(banBtn);
+                        }
+                    }
                     panel.appendChild(actions);
                 }
 
@@ -3461,6 +3549,95 @@
 
 
         /* ======================================================
+           PROFILE + STAFF
+           ====================================================== */
+        async function loadCurrentAccountState() {
+            try {
+                let profileResult = await supabaseClient.from("profiles").select("user_id, display_name, religion, bio, status, is_banned, mvn_points").eq("user_id", currentUser.id).maybeSingle();
+                if (profileResult.error) throw profileResult.error;
+                if (!profileResult.data) {
+                    const fallbackName = createDisplayName(currentUser.email);
+                    const created = await supabaseClient.from("profiles").insert({user_id: currentUser.id, display_name: fallbackName}).select("user_id, display_name, religion, bio, status, is_banned, mvn_points").single();
+                    if (created.error) throw created.error;
+                    profileResult = created;
+                }
+                currentProfile = profileResult.data;
+                if (currentProfile.is_banned) {
+                    await supabaseClient.auth.signOut();
+                    currentUser = null;
+                    alert("This MyVideoNet account has been banned.");
+                    return false;
+                }
+                const roleResult = await supabaseClient.from("staff_roles").select("role").eq("user_id", currentUser.id).maybeSingle();
+                currentStaffRole = (!roleResult.error && roleResult.data) ? roleResult.data.role : null;
+                profileDisplayName.value = currentProfile.display_name || createDisplayName(currentUser.email);
+                profileReligion.value = currentProfile.religion || "";
+                profileStatus.value = currentProfile.status || "";
+                profileBio.value = currentProfile.bio || "";
+                updateProfileCounters();
+                const countResult = await supabaseClient.from("subscriptions").select("id", {count:"exact", head:true}).eq("channel_id", currentUser.id);
+                const count = countResult.count || 0;
+                profileSubscriberCount.textContent = count + (count === 1 ? " subscriber" : " subscribers");
+                if (currentStaffRole) profileSubscriberCount.textContent += " • " + currentStaffRole.toUpperCase();
+                userDisplay.textContent = currentProfile.display_name || currentUser.email || "MyVideoNet User";
+                return true;
+            } catch (error) {
+                console.error("Profile loading error:", error);
+                profileMessage.textContent = "Profile could not be loaded: " + (error.message || "Unknown error");
+                profileMessage.className = "message error";
+                return true;
+            }
+        }
+
+        function updateProfileCounters() {
+            statusCounter.textContent = profileStatus.value.length + " / 75";
+            bioCounter.textContent = profileBio.value.length + " / 250";
+        }
+        profileStatus.addEventListener("input", updateProfileCounters);
+        profileBio.addEventListener("input", updateProfileCounters);
+        profileForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            if (!currentUser) return;
+            const displayName = profileDisplayName.value.trim();
+            if (!displayName) { profileMessage.textContent = "Please enter a display name."; profileMessage.className = "message error"; return; }
+            saveProfileBtn.disabled = true;
+            try {
+                const result = await supabaseClient.from("profiles").update({
+                    display_name: displayName, religion: profileReligion.value || null,
+                    status: profileStatus.value.trim(), bio: profileBio.value.trim()
+                }).eq("user_id", currentUser.id);
+                if (result.error) throw result.error;
+                currentProfile = {...currentProfile, display_name: displayName, religion: profileReligion.value || null, status: profileStatus.value.trim(), bio: profileBio.value.trim()};
+                userDisplay.textContent = displayName;
+                profileMessage.textContent = "Profile saved."; profileMessage.className = "message success";
+                await Promise.all([renderSidebar(), renderVideos()]);
+            } catch (error) {
+                profileMessage.textContent = "Profile could not be saved. " + (error.message || ""); profileMessage.className = "message error";
+            } finally { saveProfileBtn.disabled = false; }
+        });
+
+        async function setVideoPin(videoId, shouldPin) {
+            try {
+                const result = await supabaseClient.rpc("mvn_set_video_pin", {target_video: Number(videoId), should_pin: shouldPin});
+                if (result.error) throw result.error;
+                await renderVideos();
+            } catch (error) { alert("Pin change failed. " + (error.message || "")); }
+        }
+
+        async function banUser(userId, name) {
+            const reason = window.prompt("Reason for banning " + name + ":", "Rule violation");
+            if (reason === null) return;
+            if (!window.confirm("Ban " + name + " and remove all of their videos, comments and subscriptions?")) return;
+            try {
+                const result = await supabaseClient.rpc("mvn_ban_user", {target_user: userId, reason: reason});
+                if (result.error) throw result.error;
+                alert(name + " has been banned from MyVideoNet.");
+                const url = new URL(window.location.href); url.searchParams.delete("video"); window.history.replaceState({}, "", url.toString());
+                await Promise.all([renderSidebar(), renderVideos()]);
+            } catch (error) { alert("Ban failed. " + (error.message || "")); }
+        }
+
+        /* ======================================================
            SUBSCRIPTIONS + MVN-POINT SIDEBAR
            ====================================================== */
 
@@ -3477,7 +3654,7 @@
                     await Promise.all([
                         supabaseClient
                             .from("profiles")
-                            .select("user_id, display_name, mvn_points")
+                            .select("user_id, display_name, mvn_points, religion, bio, status, is_banned")
                             .order("mvn_points", { ascending: false })
                             .limit(25),
 
@@ -3670,7 +3847,7 @@
                             );
                         }
 
-                        await renderSidebar();
+                        await Promise.all([renderSidebar(), loadCurrentAccountState()]);
 
                     } catch (error) {
                         console.error("Subscription error:", error);
@@ -3757,7 +3934,7 @@
                 if (
                     lookup.data &&
                     lookup.data.storage_path &&
-                    lookup.data.user_id === currentUser.id
+                    (lookup.data.user_id === currentUser.id || currentStaffRole)
                 ) {
                     const storageDelete =
                         await supabaseClient.storage
