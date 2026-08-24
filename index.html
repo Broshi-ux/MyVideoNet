@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>MyVideoNet - Watch & Share</title>
+    <title>MyVideoNet - Videos, Profiles & Community</title>
 
     <style>
         * {
@@ -790,6 +790,125 @@
         .pinned-badge { position: absolute; top: 9px; left: 9px; z-index: 2; padding: 5px 8px; border-radius: 5px; background: rgba(0,0,0,.82); color: #f5c518; font-size: 11px; font-weight: 800; }
         @media (max-width: 1100px) { .dashboard-layout { grid-template-columns: 220px minmax(0,1fr); } .right-sidebar { position: static; grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); } }
 
+
+        /* ======================================================
+           ACCOUNT + OWNER STAFF MANAGEMENT
+           ====================================================== */
+
+        .danger-zone {
+            border-color: #5b2424;
+        }
+
+        .danger-zone h3 {
+            color: #ff8a8a;
+        }
+
+        .danger-note {
+            margin: 0 0 12px;
+            color: #aaa;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .danger-btn {
+            width: 100%;
+            border: 0;
+            border-radius: 5px;
+            padding: 10px 12px;
+            background: #8f1d1d;
+            color: white;
+            font-weight: 800;
+        }
+
+        .danger-btn:hover {
+            background: #b32626;
+        }
+
+        .danger-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .owner-panel.hidden {
+            display: none !important;
+        }
+
+        .staff-form {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .staff-select {
+            width: 100%;
+        }
+
+        .staff-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .staff-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .staff-list-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 7px 0;
+            border-top: 1px solid #2b2b2b;
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .channel-profile-card {
+            margin: 12px 0 16px;
+            padding: 12px;
+            background: #171717;
+            border: 1px solid #2d2d2d;
+            border-radius: 8px;
+        }
+
+        .channel-profile-name {
+            margin: 0 0 6px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .channel-profile-status {
+            margin: 0 0 7px;
+            color: #ddd;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .channel-profile-bio {
+            margin: 0 0 7px;
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.45;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .channel-profile-meta {
+            margin: 0;
+            color: #777;
+            font-size: 12px;
+        }
+
+        .moderation-note {
+            margin-top: 7px;
+            color: #888;
+            font-size: 11px;
+        }
+
         /* ======================================================
            RESPONSIVE
            ====================================================== */
@@ -975,7 +1094,7 @@
 
                 <aside class="left-sidebar">
                     <section class="sidebar-panel">
-                        <img class="brand-image" src="mvn-logo.png" alt="MyVideoNet logo">
+                        <img class="brand-image" src="data:image/png;base64,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" alt="MyVideoNet logo">
                         <h3>My Profile</h3>
                         <p id="profile-subscriber-count" class="subscriber-count">0 subscribers</p>
                         <form id="profile-form" class="profile-form">
@@ -998,6 +1117,32 @@
                     <section class="sidebar-panel">
                         <h3>MyVideoNet Rules</h3>
                         <ul class="rules-list"><li>No NSFW content.</li><li>No “888” propaganda.</li><li>No gore.</li><li>No illegal content.</li></ul>
+                    </section>
+
+                    <section id="owner-staff-panel" class="sidebar-panel owner-panel hidden">
+                        <h3>Owner Staff Manager</h3>
+                        <p class="danger-note">Assign Moderator, Admin, or Owner status to an existing MyVideoNet profile.</p>
+                        <div class="staff-form">
+                            <select id="staff-user-select" class="text-input staff-select"></select>
+                            <select id="staff-role-select" class="text-input staff-select">
+                                <option value="moderator">Moderator</option>
+                                <option value="admin">Admin</option>
+                                <option value="owner">Owner</option>
+                            </select>
+                            <div class="staff-actions">
+                                <button id="assign-staff-btn" class="primary-btn" type="button">Assign</button>
+                                <button id="remove-staff-btn" class="moderation-btn danger" type="button">Remove</button>
+                            </div>
+                        </div>
+                        <div id="staff-message" class="message" aria-live="polite"></div>
+                        <div id="staff-list" class="staff-list"></div>
+                    </section>
+
+                    <section class="sidebar-panel danger-zone">
+                        <h3>Account</h3>
+                        <p class="danger-note">Permanently delete your MyVideoNet account, uploaded videos, comments, ratings and subscriptions.</p>
+                        <button id="delete-my-account-btn" class="danger-btn" type="button">Delete My Account</button>
+                        <p class="moderation-note">This uses MyVideoNet's secure Supabase server function. It cannot be undone.</p>
                     </section>
                 </aside>
 
@@ -1222,6 +1367,30 @@
 
         const leaderboardList =
             document.getElementById("leaderboard-list");
+
+        const ownerStaffPanel =
+            document.getElementById("owner-staff-panel");
+
+        const staffUserSelect =
+            document.getElementById("staff-user-select");
+
+        const staffRoleSelect =
+            document.getElementById("staff-role-select");
+
+        const assignStaffBtn =
+            document.getElementById("assign-staff-btn");
+
+        const removeStaffBtn =
+            document.getElementById("remove-staff-btn");
+
+        const staffMessage =
+            document.getElementById("staff-message");
+
+        const staffList =
+            document.getElementById("staff-list");
+
+        const deleteMyAccountBtn =
+            document.getElementById("delete-my-account-btn");
 
         const profileForm = document.getElementById("profile-form");
         const profileDisplayName = document.getElementById("profile-display-name");
@@ -2499,6 +2668,56 @@
                 panel.appendChild(player);
                 panel.appendChild(title);
                 panel.appendChild(channelRow);
+
+                const uploaderProfile =
+                    database.profiles.find(
+                        item => item.user_id === video.user_id
+                    );
+
+                if (uploaderProfile) {
+                    const channelProfileCard = document.createElement("section");
+                    channelProfileCard.className = "channel-profile-card";
+
+                    const profileName = document.createElement("p");
+                    profileName.className = "channel-profile-name";
+                    profileName.textContent =
+                        uploaderProfile.display_name ||
+                        video.uploader ||
+                        "MyVideoNet User";
+
+                    channelProfileCard.appendChild(profileName);
+
+                    if (uploaderProfile.status) {
+                        const status = document.createElement("p");
+                        status.className = "channel-profile-status";
+                        status.textContent = uploaderProfile.status;
+                        channelProfileCard.appendChild(status);
+                    }
+
+                    if (uploaderProfile.bio) {
+                        const bio = document.createElement("p");
+                        bio.className = "channel-profile-bio";
+                        bio.textContent = uploaderProfile.bio;
+                        channelProfileCard.appendChild(bio);
+                    }
+
+                    const meta = document.createElement("p");
+                    meta.className = "channel-profile-meta";
+                    const religionText =
+                        uploaderProfile.religion
+                            ? " • " + uploaderProfile.religion
+                            : "";
+                    meta.textContent =
+                        channelSubscribers +
+                        (channelSubscribers === 1 ? " subscriber" : " subscribers") +
+                        " • " +
+                        Number(uploaderProfile.mvn_points || 0) +
+                        " MVN" +
+                        religionText;
+                    channelProfileCard.appendChild(meta);
+                    panel.appendChild(channelProfileCard);
+                }
+
                 panel.appendChild(createRatingArea(video, videoRatings));
                 panel.appendChild(createCommentsArea(video, videoComments));
 
@@ -3311,7 +3530,10 @@
 
                     if (
                         currentUser &&
-                        comment.user_id === currentUser.id
+                        (
+                            comment.user_id === currentUser.id ||
+                            currentStaffRole
+                        )
                     ) {
 
                         const deleteBtn =
@@ -3326,7 +3548,11 @@
                             "comment-delete";
 
                         deleteBtn.textContent =
-                            "Delete";
+                            (
+                                comment.user_id === currentUser.id
+                                    ? "Delete"
+                                    : "Moderator Delete"
+                            );
 
 
                         deleteBtn.addEventListener(
@@ -3570,6 +3796,16 @@
                 }
                 const roleResult = await supabaseClient.from("staff_roles").select("role").eq("user_id", currentUser.id).maybeSingle();
                 currentStaffRole = (!roleResult.error && roleResult.data) ? roleResult.data.role : null;
+
+                if (currentStaffRole === "owner") {
+                    ownerStaffPanel.classList.remove("hidden");
+                    await renderOwnerStaffManager();
+                } else {
+                    ownerStaffPanel.classList.add("hidden");
+                    staffList.replaceChildren();
+                    staffUserSelect.replaceChildren();
+                }
+
                 profileDisplayName.value = currentProfile.display_name || createDisplayName(currentUser.email);
                 profileReligion.value = currentProfile.religion || "";
                 profileStatus.value = currentProfile.status || "";
@@ -3636,6 +3872,374 @@
                 await Promise.all([renderSidebar(), renderVideos()]);
             } catch (error) { alert("Ban failed. " + (error.message || "")); }
         }
+
+
+        /* ======================================================
+           DELETE MY ACCOUNT
+           ====================================================== */
+
+        deleteMyAccountBtn.addEventListener(
+            "click",
+            async function () {
+
+                if (!currentUser) {
+                    return;
+                }
+
+                const firstConfirm =
+                    window.confirm(
+                        "Permanently delete your MyVideoNet account and all of your content?"
+                    );
+
+                if (!firstConfirm) {
+                    return;
+                }
+
+                const typed =
+                    window.prompt(
+                        'Type DELETE to permanently delete your account:'
+                    );
+
+                if (typed !== "DELETE") {
+                    alert("Account deletion cancelled.");
+                    return;
+                }
+
+                deleteMyAccountBtn.disabled = true;
+                deleteMyAccountBtn.textContent = "Deleting Account...";
+
+                try {
+
+                    const result =
+                        await supabaseClient.functions.invoke(
+                            "delete-my-account",
+                            {
+                                body: {
+                                    confirmation: "DELETE"
+                                }
+                            }
+                        );
+
+                    if (result.error) {
+                        throw result.error;
+                    }
+
+                    if (
+                        result.data &&
+                        result.data.error
+                    ) {
+                        throw new Error(
+                            result.data.error
+                        );
+                    }
+
+                    await supabaseClient.auth.signOut();
+
+                    alert(
+                        "Your MyVideoNet account has been permanently deleted."
+                    );
+
+                    window.location.href =
+                        window.location.pathname;
+
+                } catch (error) {
+
+                    console.error(
+                        "Account deletion error:",
+                        error
+                    );
+
+                    alert(
+                        "Your account could not be deleted. " +
+                        (
+                            error.message ||
+                            "Make sure the delete-my-account Supabase Edge Function is deployed."
+                        )
+                    );
+
+                } finally {
+
+                    deleteMyAccountBtn.disabled = false;
+                    deleteMyAccountBtn.textContent = "Delete My Account";
+                }
+            }
+        );
+
+
+        /* ======================================================
+           OWNER STAFF MANAGER
+           ====================================================== */
+
+        async function renderOwnerStaffManager() {
+
+            if (
+                !currentUser ||
+                currentStaffRole !== "owner"
+            ) {
+                return;
+            }
+
+            try {
+
+                const [
+                    profilesResult,
+                    staffResult
+                ] =
+                    await Promise.all([
+                        supabaseClient
+                            .from("profiles")
+                            .select("user_id, display_name, is_banned")
+                            .order("display_name", {ascending: true}),
+
+                        supabaseClient
+                            .from("staff_roles")
+                            .select("user_id, role")
+                    ]);
+
+                if (profilesResult.error) {
+                    throw profilesResult.error;
+                }
+
+                if (staffResult.error) {
+                    throw staffResult.error;
+                }
+
+                const profiles =
+                    profilesResult.data || [];
+
+                const roles =
+                    staffResult.data || [];
+
+                staffUserSelect.replaceChildren();
+
+                for (const profile of profiles) {
+
+                    if (profile.user_id === currentUser.id) {
+                        continue;
+                    }
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value =
+                        profile.user_id;
+
+                    const existing =
+                        roles.find(
+                            item =>
+                                item.user_id ===
+                                profile.user_id
+                        );
+
+                    option.textContent =
+                        (
+                            profile.display_name ||
+                            "MyVideoNet User"
+                        ) +
+                        (
+                            existing
+                                ? " [" +
+                                  existing.role.toUpperCase() +
+                                  "]"
+                                : ""
+                        ) +
+                        (
+                            profile.is_banned
+                                ? " [BANNED]"
+                                : ""
+                        );
+
+                    staffUserSelect.appendChild(
+                        option
+                    );
+                }
+
+                staffList.replaceChildren();
+
+                const profileMap =
+                    new Map(
+                        profiles.map(
+                            profile => [
+                                profile.user_id,
+                                profile
+                            ]
+                        )
+                    );
+
+                for (const staff of roles) {
+
+                    const row =
+                        document.createElement("div");
+
+                    row.className =
+                        "staff-list-row";
+
+                    const profile =
+                        profileMap.get(
+                            staff.user_id
+                        );
+
+                    const name =
+                        document.createElement("span");
+
+                    name.textContent =
+                        profile
+                            ? profile.display_name
+                            : staff.user_id;
+
+                    const role =
+                        document.createElement("strong");
+
+                    role.textContent =
+                        staff.role.toUpperCase();
+
+                    row.appendChild(name);
+                    row.appendChild(role);
+                    staffList.appendChild(row);
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Staff manager load error:",
+                    error
+                );
+
+                staffMessage.textContent =
+                    "Could not load staff manager. " +
+                    (
+                        error.message ||
+                        ""
+                    );
+
+                staffMessage.className =
+                    "message error";
+            }
+        }
+
+
+        assignStaffBtn.addEventListener(
+            "click",
+            async function () {
+
+                if (
+                    currentStaffRole !== "owner" ||
+                    !staffUserSelect.value
+                ) {
+                    return;
+                }
+
+                assignStaffBtn.disabled = true;
+
+                try {
+
+                    const result =
+                        await supabaseClient.rpc(
+                            "mvn_set_staff_role",
+                            {
+                                target_user:
+                                    staffUserSelect.value,
+
+                                new_role:
+                                    staffRoleSelect.value
+                            }
+                        );
+
+                    if (result.error) {
+                        throw result.error;
+                    }
+
+                    staffMessage.textContent =
+                        "Staff role assigned.";
+
+                    staffMessage.className =
+                        "message success";
+
+                    await renderOwnerStaffManager();
+
+                } catch (error) {
+
+                    staffMessage.textContent =
+                        "Role assignment failed. " +
+                        (
+                            error.message ||
+                            ""
+                        );
+
+                    staffMessage.className =
+                        "message error";
+
+                } finally {
+
+                    assignStaffBtn.disabled = false;
+                }
+            }
+        );
+
+
+        removeStaffBtn.addEventListener(
+            "click",
+            async function () {
+
+                if (
+                    currentStaffRole !== "owner" ||
+                    !staffUserSelect.value
+                ) {
+                    return;
+                }
+
+                if (
+                    !window.confirm(
+                        "Remove this user's MyVideoNet staff role?"
+                    )
+                ) {
+                    return;
+                }
+
+                removeStaffBtn.disabled = true;
+
+                try {
+
+                    const result =
+                        await supabaseClient.rpc(
+                            "mvn_remove_staff_role",
+                            {
+                                target_user:
+                                    staffUserSelect.value
+                            }
+                        );
+
+                    if (result.error) {
+                        throw result.error;
+                    }
+
+                    staffMessage.textContent =
+                        "Staff role removed.";
+
+                    staffMessage.className =
+                        "message success";
+
+                    await renderOwnerStaffManager();
+
+                } catch (error) {
+
+                    staffMessage.textContent =
+                        "Role removal failed. " +
+                        (
+                            error.message ||
+                            ""
+                        );
+
+                    staffMessage.className =
+                        "message error";
+
+                } finally {
+
+                    removeStaffBtn.disabled = false;
+                }
+            }
+        );
+
 
         /* ======================================================
            SUBSCRIPTIONS + MVN-POINT SIDEBAR
