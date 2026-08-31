@@ -37,6 +37,12 @@
             display: none !important;
         }
 
+        /* Prevent the login screen from flashing while Supabase restores a saved session. */
+        body.app-loading .navbar,
+        body.app-loading .content-wrapper {
+            visibility: hidden;
+        }
+
         /* ======================================================
            NAVBAR
            ====================================================== */
@@ -959,10 +965,142 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ======================================================
+           RESPONSIVE / ZOOM STABILITY FIXES
+           ====================================================== */
+        html {
+            min-width: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            min-width: 0;
+            overflow-x: hidden;
+        }
+
+        .content-wrapper,
+        .dashboard-layout,
+        .dashboard-main,
+        .left-sidebar,
+        .right-sidebar,
+        .sidebar-panel,
+        .creator-studio,
+        .watch-panel {
+            min-width: 0;
+            max-width: 100%;
+        }
+
+        .creator-form > *,
+        .staff-actions > *,
+        .channel-row > * {
+            min-width: 0;
+        }
+
+        img, video, iframe {
+            max-width: 100%;
+        }
+
+        @media (max-width: 1180px) {
+            .dashboard-layout {
+                grid-template-columns: 220px minmax(0, 1fr);
+            }
+
+            .right-sidebar {
+                position: static;
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 850px) {
+            .dashboard-layout {
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .dashboard-main {
+                order: 1;
+                width: 100%;
+            }
+
+            .left-sidebar {
+                order: 2;
+                position: static;
+                width: 100%;
+            }
+
+            .right-sidebar {
+                order: 3;
+                position: static;
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .creator-form {
+                grid-template-columns: 1fr;
+            }
+
+            .video-grid {
+                grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .content-wrapper {
+                padding: 14px 12px 32px;
+            }
+
+            .navbar {
+                padding: 10px 12px;
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .user-controls {
+                width: 100%;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            #user-display {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .right-sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .channel-row,
+            .comment-form {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .subscribe-btn,
+            .comment-submit {
+                width: 100%;
+            }
+
+            .watch-title {
+                font-size: clamp(19px, 6vw, 24px);
+            }
+
+            .auth-card,
+            .creator-studio,
+            .sidebar-panel {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body class="app-loading">
 
     <!-- ========================================================
          NAVIGATION
@@ -1437,7 +1575,8 @@
                         : null;
 
 
-                updateScreen();
+                await updateScreen();
+                document.body.classList.remove("app-loading");
 
 
             } catch (error) {
@@ -1451,6 +1590,7 @@
                     "MyVideoNet could not connect to the account service. Please refresh the page.",
                     "error"
                 );
+                document.body.classList.remove("app-loading");
             }
         }
 
@@ -2490,7 +2630,9 @@
             const openVideo = function () {
                 const url = new URL(window.location.href);
                 url.searchParams.set("video", video.id);
-                window.location.href = url.toString();
+                window.history.pushState({ video: String(video.id) }, "", url.toString());
+                renderVideos();
+                window.scrollTo({ top: 0, behavior: "smooth" });
             };
 
             card.addEventListener("click", openVideo);
@@ -2609,7 +2751,9 @@
                 back.addEventListener("click", function () {
                     const url = new URL(window.location.href);
                     url.searchParams.delete("video");
-                    window.location.href = url.toString();
+                    window.history.pushState({}, "", url.toString());
+                    renderVideos();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                 });
 
                 const panel = document.createElement("article");
@@ -3874,6 +4018,14 @@
         }
 
 
+        /* Keep browser Back / Forward working without reloading MyVideoNet. */
+        window.addEventListener("popstate", function () {
+            if (currentUser) {
+                renderVideos();
+            }
+        });
+
+
         /* ======================================================
            DELETE MY ACCOUNT
            ====================================================== */
@@ -3915,7 +4067,7 @@
                             "delete-my-account",
                             {
                                 body: {
-                                    confirmation: "DELETE"
+                                    confirmation: "MyVideoNet"
                                 }
                             }
                         );
